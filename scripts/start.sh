@@ -1,7 +1,10 @@
 #!/bin/bash
 #set -ex
 
-GIT_BRANCH="master"
+GIT_BRANCH="test-branch-kevin"
+GIT_USER_NAME="ASUP"
+GIT_USER_EMAIL="asup@support.dazzle.be"
+GIT_SECURITY_BRANCH="security/$(date +%s)"
 
 composer --version
 php --version
@@ -26,7 +29,7 @@ cd /code/project
 git clone --branch $GIT_BRANCH --progress --verbose git@gitlab.dazzle.be:dazzle/brrc-geoportal.git .
 
 # Move to an security branch:
-git checkout -b security/$(date +%s)
+git checkout -b $GIT_SECURITY_BRANCH
 
 composer install --dry-run
 if [[ $(composer install) ]]; then echo -e "# \e[1;35mComposer install succesfully!\e[0m"; else echo -e "# \e[1;31mComposer install failed... That's bad news.\e[0m"; exit 1; fi
@@ -37,18 +40,24 @@ composer outdated --direct > outdated.txt
 #php /usr/local/bin/uv.php
 echo -e "# \e[1;35mActual update via composer\e[0m"
 composer update drupal/core "drupal/core-*" --with-all-dependencies --dry-run
-if [[ $(composer update drupal/core "drupal/core-*" --with-all-dependencies) == *"Could not apply patch!"* ]]; then echo -e "# \e[1;31mCould not apply patch!\e[0m"; exit 1; else echo "Core update OK"; fi
+if [[ $(composer update drupal/core "drupal/core-*" --with-all-dependencies) == *"Could not apply patch!"* ]]; then echo -e "# \e[1;31mCould not apply patch!\e[0m"; exit 1; else echo -e "# \e[1;35mCore update OK\e[0m"; fi
 
 composer update --with-all-dependencies --dry-run
-if [[ $(composer update --with-all-dependencies) == *"Could not apply patch!"* ]]; then echo -e "# \e[1;31mCould not apply patch!\e[0m"; exit 1; else echo "All updates OK"; fi
-
-git branch -v
-git status
-git add .
-git commit -m "Security: Automatic update"
+if [[ $(composer update --with-all-dependencies) == *"Could not apply patch!"* ]]; then echo -e "# \e[1;31mCould not apply patch!\e[0m"; exit 1; else echo -e "# \e[1;35mAll updates OK\e[0m"; fi
 
 # Cleanup.
 rm outdated.txt
+
+# Configure GIT client.
+git config --global user.email "${GIT_USER_EMAIL}"
+git config --global user.name "${GIT_USER_NAME}"
+# Start pushing back to Gitlab.
+git branch -v
+git status
+git add .
+git commit -m "Security: Automatic update on ${date}"
+git push origin $GIT_SECURITY_BRANCH
+
 
 #while true; do echo "zZzZzZz"; sleep 2000; done
 
