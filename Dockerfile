@@ -2,10 +2,10 @@ FROM php:7.4.27-cli-alpine3.15
 # Set the correct timezone.
 ENV TZ=Europe/Brussels
 
-# Install bash, GIT and ssh
+# Installations
 RUN apk update; \
     apk upgrade; \
-    apk add bash git openssh zip unzip;
+    apk add bash git openssh zip unzip patch;
 
 RUN apk add libpng-dev \
             libpq-dev \
