@@ -1,10 +1,37 @@
 #!/bin/bash
 #set -ex
 
-GIT_BRANCH="test-branch-kevin"
+ASUP_TIMESTAMP=$(date +%s)
+if ! [ -v ${GIT_AUTO_MERGE+x} ]; then echo "GIT_AUTO_MERGE provided with value: $GIT_AUTO_MERGE"; else GIT_AUTO_MERGE=1; fi
+if ! [ -v ${GITLAB_HOST+x} ]; then echo "GITLAB_HOST provided with value: $GITLAB_HOST"; else GITLAB_HOST="https://gitlab.dazzle.be"; fi
+if ! [ -v ${GITLAB_TOKEN+x} ]; then echo "GITLAB_TOKEN provided with value: $GITLAB_TOKEN"; else echo -e "# \e[1;31mGITLAB_TOKEN not provided.\e[0m"; exit 1; fi
+if ! [ -v ${GITLAB_PROJECT_ID+x} ]; then echo "GITLAB_PROJECT_ID provided with value: $GITLAB_PROJECT_ID"; else echo -e "# \e[1;31mGITLAB_PROJECT_ID not provided.\e[0m"; exit 1; fi
+if ! [ -v ${GIT_BRANCH_TARGET+x} ]; then echo "GIT_BRANCH_TARGET provided with value: $GIT_BRANCH_TARGET"; else echo -e "# \e[1;31mGIT_BRANCH_TARGET not provided.\e[0m"; exit 1; fi
+
 GIT_USER_NAME="ASUP"
 GIT_USER_EMAIL="asup@support.dazzle.be"
-GIT_SECURITY_BRANCH="security/$(date +%s)"
+GIT_BRANCH_SOURCE="security/$ASUP_TIMESTAMP"
+
+# Write PHP variables file.
+cat > /code/gitlab-api/variables.php <<EOL
+  <?php
+  /**
+   * @file
+   *
+   * This file is generated.
+   */
+  const GITLAB_HOST = '$GITLAB_HOST';
+  const GITLAB_TOKEN = '$GITLAB_TOKEN';
+
+  const GITLAB_PROJECT_ID = '$GITLAB_PROJECT_ID';
+  const GIT_BRANCH_SOURCE = '$GIT_BRANCH_SOURCE';
+  const GIT_BRANCH_TARGET = '$GIT_BRANCH_TARGET';
+
+  const GIT_AUTO_MERGE = $GIT_AUTO_MERGE;
+
+  const MERGE_REQUEST_TITLE = 'Automated security MR $ASUP_TIMESTAMP';
+  const MERGE_REQUEST_DESCRIPTION = 'Automated MR by ASUP';
+EOL
 
 composer --version
 php --version
@@ -26,10 +53,10 @@ ssh-keyscan -H 22 "gitlab.dazzle.be" >> ~/.ssh/known_hosts
 mkdir -p /code/project
 cd /code/project
 
-git clone --branch $GIT_BRANCH --progress --verbose git@gitlab.dazzle.be:dazzle/brrc-geoportal.git .
+git clone --branch $GIT_BRANCH_TARGET --progress --verbose git@gitlab.dazzle.be:dazzle/brrc-geoportal.git .
 
 # Move to an security branch:
-git checkout -b $GIT_SECURITY_BRANCH
+git checkout -b $GIT_BRANCH_SOURCE
 
 composer install --dry-run
 if [[ $(composer install) ]]; then echo -e "# \e[1;35mComposer install succesfully!\e[0m"; else echo -e "# \e[1;31mComposer install failed... That's bad news.\e[0m"; exit 1; fi
@@ -56,17 +83,14 @@ git branch -v
 git status
 git add .
 git commit -m "Security: Automatic update on ${date}"
-git push origin $GIT_SECURITY_BRANCH
+git push origin $GIT_BRANCH_SOURCE
 
+# Create MR and/or merge it.
+php /usr/local/bin/gitlab-api.php
+
+if [[ $? == 0 ]]; then echo -e "# \e[1;35mMission accomplished.\e[0m"; else echo -e "# \e[1;31mSome last minute failure occurred. This is bad news.\e[0m"; fi
 
 #while true; do echo "zZzZzZz"; sleep 2000; done
-
-#####
-# ssh xx@xxx -s "bash drush sql-dump"
-# ssh xx@xxx -s "bash composer update"
-# ssh xx@xxx -s "bash behat"
-# If fails
-# ssh xx@xxx -s "bash composer update"
 
 # Mail on error?
 # Watcher in MR?

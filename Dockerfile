@@ -27,6 +27,11 @@ RUN docker-php-ext-install -j "$(nproc)" \
 COPY --from=composer:2.1.14 /usr/bin/composer /usr/local/bin/composer
 #COPY --from=composer:1.10.25 /usr/bin/composer /usr/local/bin/composer
 
+# We use this library to invoke commands to Gitlab.
+RUN mkdir -p /code/gitlab-api; \
+    cd /code/gitlab-api; \
+    composer require "m4tthumphrey/php-gitlab-api:^11.7" "guzzlehttp/guzzle:^7.4" "http-interop/http-factory-guzzle:^1.2";
+
 COPY scripts/* /usr/local/bin/
 COPY ssh/* /mount/ssh/
 
