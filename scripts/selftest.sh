@@ -13,7 +13,6 @@ cd /code/selftest
 
 
 #### Scenario 1 ####
-
 echo -e "# \e[1;33mScenario 1: Assume we have version 1.1.3, and composer.json has constraint ^1.1\e[0m"
 
 echo -e "# \e[1;35mRequire psr/log 1.1.3\e[0m"
@@ -27,7 +26,6 @@ composer update
 if [[ $(composer outdated) ]]; then echo -e "# \e[1;31mThere are still updates. Something went horribly wrong.\e[0m"; exit 1; else echo -e "# \e[1;35mComposer reporting nothing to update; Perfect!\e[0m"; fi
 
 echo -e "# \e[1;33mEnd of scenario 1\e[0m"
-
 ####################
 
 #### Scenario 2 ####

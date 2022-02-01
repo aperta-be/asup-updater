@@ -1,8 +1,14 @@
 #!/bin/bash
 #set -ex
 
+# Here we have the ability to set some variables via a local .env file. This is useful for development.
+if [ -f /code/.env ]
+then
+  export $(cat /code/.env | sed 's/#.*//g' | xargs)
+fi
+
 ASUP_TIMESTAMP=$(date +%s)
-if ! [ -v ${GIT_AUTO_MERGE+x} ]; then echo "GIT_AUTO_MERGE provided with value: $GIT_AUTO_MERGE"; else GIT_AUTO_MERGE=1; fi
+if ! [ -v ${GIT_AUTO_MERGE+x} ]; then echo "GIT_AUTO_MERGE provided with value: $GIT_AUTO_MERGE"; else GIT_AUTO_MERGE=0; fi
 if ! [ -v ${GITLAB_HOST+x} ]; then echo "GITLAB_HOST provided with value: $GITLAB_HOST"; else GITLAB_HOST="https://gitlab.dazzle.be"; fi
 if ! [ -v ${GITLAB_TOKEN+x} ]; then echo "GITLAB_TOKEN provided with value: $GITLAB_TOKEN"; else echo -e "# \e[1;31mGITLAB_TOKEN not provided.\e[0m"; exit 1; fi
 if ! [ -v ${GITLAB_PROJECT_ID+x} ]; then echo "GITLAB_PROJECT_ID provided with value: $GITLAB_PROJECT_ID"; else echo -e "# \e[1;31mGITLAB_PROJECT_ID not provided.\e[0m"; exit 1; fi
@@ -83,10 +89,10 @@ git branch -v
 git status
 git add .
 git commit -m "Security: Automatic update on ${date}"
-git push origin $GIT_BRANCH_SOURCE
+if [[ $DRY_RUN == 1 ]]; then echo -e "# \e[1;33mDRYRUN: Normally a GIT push would have happened.\e[0m"; else git push origin $GIT_BRANCH_SOURCE; fi
 
 # Create MR and/or merge it.
-php /usr/local/bin/gitlab-api.php
+if [[ $DRY_RUN == 1 ]]; then echo -e "# \e[1;33mDRYRUN: Normally a GIT MR/merge would have happened.\e[0m"; else php /usr/local/bin/gitlab-api.php; fi
 
 if [[ $? == 0 ]]; then echo -e "# \e[1;35mMission accomplished.\e[0m"; else echo -e "# \e[1;31mSome last minute failure occurred. This is bad news.\e[0m"; fi
 

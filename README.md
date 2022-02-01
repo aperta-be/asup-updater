@@ -1,3 +1,4 @@
 ASUP
 ----
-Aperta/Automated Security Update Pipeline
+Aperta/Automated Security Updates Provider
+
