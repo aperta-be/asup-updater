@@ -60,7 +60,7 @@ ssh-keyscan -H 22 "gitlab.dazzle.be" >> ~/.ssh/known_hosts
 mkdir -p /code/project
 cd /code/project
 
-git clone --branch $GIT_BRANCH_TARGET --progress --verbose git@gitlab.dazzle.be:dazzle/brrc-geoportal.git .
+git clone --branch $GIT_BRANCH_TARGET --progress --verbose $GIT_CLONE_URL .
 
 # Move to an security branch:
 git checkout -b $GIT_BRANCH_SOURCE
