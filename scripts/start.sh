@@ -13,6 +13,7 @@ if ! [ -v ${GITLAB_HOST+x} ]; then echo "GITLAB_HOST provided with value: $GITLA
 if ! [ -v ${GITLAB_TOKEN+x} ]; then echo "GITLAB_TOKEN provided with value: $GITLAB_TOKEN"; else echo -e "# \e[1;31mGITLAB_TOKEN not provided.\e[0m"; exit 1; fi
 if ! [ -v ${GITLAB_PROJECT_ID+x} ]; then echo "GITLAB_PROJECT_ID provided with value: $GITLAB_PROJECT_ID"; else echo -e "# \e[1;31mGITLAB_PROJECT_ID not provided.\e[0m"; exit 1; fi
 if ! [ -v ${GIT_BRANCH_TARGET+x} ]; then echo "GIT_BRANCH_TARGET provided with value: $GIT_BRANCH_TARGET"; else echo -e "# \e[1;31mGIT_BRANCH_TARGET not provided.\e[0m"; exit 1; fi
+if ! [ -v ${GIT_CLONE_URL+x} ]; then echo "GIT_CLONE_URL provided with value: $GIT_CLONE_URL"; else echo -e "# \e[1;31mGIT_CLONE_URL not provided.\e[0m"; exit 1; fi
 
 GIT_USER_NAME="ASUP"
 GIT_USER_EMAIL="asup@support.dazzle.be"
