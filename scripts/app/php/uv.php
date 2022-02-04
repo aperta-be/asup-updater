@@ -9,7 +9,6 @@ $composerJson = json_decode(file_get_contents('composer.json'), true);
 $listOfOutdatedPackages = file('outdated.txt');
 
 foreach ($listOfOutdatedPackages as $line) {
-  echo $line . PHP_EOL;
   $regexp = '/(?P<package>[\w]+\/[\w]+).* (?P<currentVersion>\d+\.\d+\.\d+).* (?P<latestVersion>\d+\.\d+\.\d+)/';
   preg_match($regexp, $line, $matches);
   $matches = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
@@ -31,4 +30,3 @@ foreach ($listOfOutdatedPackages as $line) {
 }
 
 file_put_contents('composer.json', json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-echo PHP_EOL;
