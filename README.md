@@ -21,6 +21,8 @@ GIT_CLONE_URL="git@gitlab.dazzle.be:dazzle/brrc-geoportal.git"
 COMPOSER_UPDATE_CONSTRAINTS=1
 SELF_TEST=1
 DRY_RUN=1
+SSH_PUBLIC_KEY=123
+SSH_PRIVATE_KEY=123
 ```
 ### Environment variables explained
 - **GIT_AUTO_MERGE**: If set to 1, it will auto-merge the security branch back into the GIT_BRANCH_TARGET. 
@@ -37,3 +39,5 @@ libraries. Defaults to 0.
 unless you need to.
 - **DRY_RUN**: The DRY_RUN parameter will make sure actual git push commands are not executed and that the
 actions are contained to local run.
+- **SSH_PUBLIC_KEY**: Optionally provide a SSH public key. Defaults to 0.
+- **SSH_PRIVATE_KEY**: Optionally provide a SSH private key. Defaults to 0.

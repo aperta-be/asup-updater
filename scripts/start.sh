@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -ex
+set -ex
 
 # Load some building block functions.
 source /code/app/sh/building_blocks.sh
