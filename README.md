@@ -6,7 +6,8 @@ and dependencies via composer.
 
 
 ## Local development
-Create a .env file in your local for local development so you can test during build phase.
+Create a .env file in the "scripts" folder in your local for local development so 
+you can test during build phase.
 
 Example content below:
 

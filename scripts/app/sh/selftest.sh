@@ -38,7 +38,7 @@ if [[ $(composer outdated) ]]; then echo -e "# \e[1;35mThere are updates. Perfec
 echo -e "# \e[1;35mCheck if newer version is available\e[0m"
 composer outdated --direct > outdated.txt
 echo -e "# \e[1;35mUpdate contraints\e[0m"
-php /usr/local/bin/uv.php
+building_blocks_composer_update_constraints
 echo -e "# \e[1;35mActual update via composer\e[0m"
 composer update
 

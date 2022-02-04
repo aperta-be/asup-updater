@@ -9,8 +9,8 @@ $composerJson = json_decode(file_get_contents('composer.json'), true);
 $listOfOutdatedPackages = file('outdated.txt');
 
 foreach ($listOfOutdatedPackages as $line) {
-
-  $regexp = '/(?P<package>[\w]+\/[\w]+).*(?P<currentVersion>\d.\d.\d).*(?P<latestVersion>\d.\d.\d)/';
+  echo $line . PHP_EOL;
+  $regexp = '/(?P<package>[\w]+\/[\w]+).* (?P<currentVersion>\d+\.\d+\.\d+).* (?P<latestVersion>\d+\.\d+\.\d+)/';
   preg_match($regexp, $line, $matches);
   $matches = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
@@ -19,16 +19,16 @@ foreach ($listOfOutdatedPackages as $line) {
 
     if (isset($composerJson['require'][$package])) {
       $currentVersion = $composerJson['require'][$package];
-      echo sprintf('Updating %s from %s to %s', $package, $currentVersion, $matches['latestVersion']);
+      echo sprintf('Updating %s from %s to %s', $package, $currentVersion, $matches['latestVersion']) . PHP_EOL;
       $composerJson['require'][$package] = $matches['latestVersion'];
     }
     if (isset($composerJson['require-dev'][$package])) {
       $currentVersion = $composerJson['require-dev'][$package];
-      echo sprintf('Updating %s from %s to %s', $package, $currentVersion, $matches['latestVersion']);
+      echo sprintf('Updating %s from %s to %s', $package, $currentVersion, $matches['latestVersion']) . PHP_EOL;
       $composerJson['require-dev'][$package] = $matches['latestVersion'];
     }
   }
 }
 
 file_put_contents('composer.json', json_encode($composerJson, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-echo "\n";
+echo PHP_EOL;

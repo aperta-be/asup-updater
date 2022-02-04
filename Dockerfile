@@ -32,8 +32,9 @@ RUN mkdir -p /code/gitlab-api; \
     cd /code/gitlab-api; \
     composer require "m4tthumphrey/php-gitlab-api:^11.7" "guzzlehttp/guzzle:^7.4" "http-interop/http-factory-guzzle:^1.2";
 
-COPY .env /code/
 COPY scripts/* /usr/local/bin/
+COPY scripts/app/sh/* /code/app/sh/
+COPY scripts/app/php/* /code/app/php/
 COPY ssh/* /mount/ssh/
 
 ENTRYPOINT ["/usr/local/bin/start.sh"]
