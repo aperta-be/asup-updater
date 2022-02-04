@@ -18,7 +18,7 @@ function composer_update_constraints() {
   if [[ $COMPOSER_UPDATE_CONSTRAINTS == 1 ]]; then
     echo -e "# \e[1;35mUpdate contraints\e[0m"
     cat composer.json > composer.json.before
-    php /usr/local/bin/uv.php
+    building_blocks_composer_update_constraints
     diff composer.json.before composer.json
   else
     echo "# COMPOSER_UPDATE_CONSTRAINTS is not 1. Skipping."

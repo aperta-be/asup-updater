@@ -12,6 +12,6 @@ if ! [ -v ${SSH_PUBLIC_KEY+x} ]; then echo "SSH_PUBLIC_KEY provided with value: 
 if ! [ -v ${SSH_PRIVATE_KEY+x} ]; then echo "SSH_PRIVATE_KEY provided, but not printing here for security reasons."; else echo -e "# \e[1;31mSSH_PRIVATE_KEY not provided. Assuming default.\e[0m"; SSH_PRIVATE_KEY=0; fi
 
 # Output the version of software we need. This will fail if not installed and it is what we want.
-composer --version
 php --version
+composer --version
 patch --version
