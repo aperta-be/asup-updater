@@ -41,16 +41,26 @@ function provisioning_writes_updates() {
   # Check if there are updates.
   composer_outdated
   if [ -s $APP_CODE_DIRECTORY/outdated.txt ]; then
+    echo "Outdated.txt exists."
+    cat $APP_CODE_DIRECTORY/outdated.txt
 
     # If we have results and it's drupal/core.
-    if cat $APP_CODE_DIRECTORY/outdated.txt | grep -xqFe "drupal/core"; then
+    if cat $APP_CODE_DIRECTORY/outdated.txt | grep "drupal/core"; then
+      echo "drupal/core found!"
       provisioning_write_to_updates_file "ALPHA"
-      else
-        # If we didn't find drupal/core but we do find drupal/ it's most likely contrib.
-        if cat $APP_CODE_DIRECTORY/outdated.txt | grep -xqFe "drupal/"; then
-              provisioning_write_to_updates_file "BETA"
-        fi
     fi
-
+    # If we didn't find drupal/core but we do find drupal/ it's most likely contrib.
+    if cat $APP_CODE_DIRECTORY/outdated.txt | grep "drupal/"; then
+      echo "drupal/ found!"
+      provisioning_write_to_updates_file "BETA"
+    fi
+    # Other updates.
+    if cat $APP_CODE_DIRECTORY/outdated.txt | grep " "; then
+      echo "Omega found!"
+      provisioning_write_to_updates_file "OMEGA"
+    # When composer outdated returns empty, so do we.
+    else
+      provisioning_write_to_updates_file ""
+    fi
   fi
 }

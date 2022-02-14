@@ -36,6 +36,7 @@ git_create_dir
 git_get_code
 
 source /code/app/sh/composer.sh
+composer_install
 composer_outdated
 composer_update_constraints
 composer_update_drupal_core
@@ -44,7 +45,6 @@ composer_update_drupal_contrib
 # Write files for monitoring.
 provisioning_write_updated_date
 provisioning_writes_updates
-echo "tmp: "
 cat $APP_PUBLIC_ROOT_DIRECTORY/asup-up.txt
 
 
