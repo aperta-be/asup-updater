@@ -11,6 +11,13 @@ if ! [ -v ${COMPOSER_UPDATE_CONSTRAINTS+x} ]; then echo "COMPOSER_UPDATE_CONSTRA
 if ! [ -v ${SSH_PUBLIC_KEY+x} ]; then echo "SSH_PUBLIC_KEY provided with value: $SSH_PUBLIC_KEY"; else echo -e "# \e[1;31mSSH_PUBLIC_KEY not provided. Assuming default.\e[0m"; SSH_PUBLIC_KEY=0; fi
 if ! [ -v ${SSH_PRIVATE_KEY+x} ]; then echo "SSH_PRIVATE_KEY provided, but not printing here for security reasons."; else echo -e "# \e[1;31mSSH_PRIVATE_KEY not provided. Assuming default.\e[0m"; SSH_PRIVATE_KEY=0; fi
 
+if ! [ -v ${APP_PUBLIC_ROOT_DIRECTORY+x} ]; then
+  echo "APP_PUBLIC_ROOT_DIRECTORY provided with value: $APP_PUBLIC_ROOT_DIRECTORY";
+  else echo -e "# \e[1;31mAPP_PUBLIC_ROOT_DIRECTORY not provided. Assuming web.\e[0m"; APP_PUBLIC_ROOT_DIRECTORY="web";
+  # Finetune APP_PUBLIC_ROOT_DIRECTORY if needed to not work with a subdirectory.
+  if [[ $APP_PUBLIC_ROOT_DIRECTORY == 0 ]]; then APP_PUBLIC_ROOT_DIRECTORY=$APP_CODE_DIRECTORY/$APP_PUBLIC_ROOT_DIRECTORY; else APP_PUBLIC_ROOT_DIRECTORY=$APP_CODE_DIRECTORY; fi
+fi
+
 # Output the version of software we need. This will fail if not installed and it is what we want.
 php --version
 composer --version

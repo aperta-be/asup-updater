@@ -1,4 +1,4 @@
-FROM php:7.4.27-cli-alpine3.15
+FROM --platform=linux/amd64 php:7.4.27-cli-alpine3.15
 # Set the correct timezone.
 ENV TZ=Europe/Brussels
 
@@ -32,7 +32,9 @@ RUN mkdir -p /code/gitlab-api; \
     cd /code/gitlab-api; \
     composer require "m4tthumphrey/php-gitlab-api:^11.7" "guzzlehttp/guzzle:^7.4" "http-interop/http-factory-guzzle:^1.2";
 
-COPY scripts/.env /usr/local/bin/
+# Remove/comment .env line if not developing locally.
+COPY .env /usr/local/bin/
+
 COPY scripts/start.sh /usr/local/bin/
 COPY scripts/app/sh/* /code/app/sh/
 COPY scripts/app/php/* /code/app/php/

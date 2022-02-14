@@ -8,8 +8,8 @@ function git_configure() {
 
 # Create GIT directory.
 function git_create_dir() {
-  mkdir -p /code/project
-  cd /code/project
+  mkdir -p APP_CODE_DIRECTORY
+  cd APP_CODE_DIRECTORY
 }
 
 function git_get_code() {

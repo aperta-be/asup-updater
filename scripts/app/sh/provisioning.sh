@@ -22,3 +22,35 @@ function provisioning_write_vars_gitlab() {
     const MERGE_REQUEST_DESCRIPTION = 'Automated MR by ASUP';
 EOL
 }
+
+# Provide the date as this is the moment. This is needed for the monitoring system.
+function provisioning_write_updated_date() {
+  echo date > $APP_PUBLIC_ROOT_DIRECTORY/asup-date.txt
+}
+
+# Provide the updates file. This is needed for the monitoring system.
+function provisioning_write_to_updates_file() {
+  if [ $# -eq 0 ]
+    then
+      echo "No arguments supplied to write updates file."
+  fi
+  echo $1 >> $APP_PUBLIC_ROOT_DIRECTORY/asup-up.txt
+}
+
+function provisioning_writes_updates() {
+  # Check if there are updates.
+  composer_outdated
+  if [ -s $APP_CODE_DIRECTORY/outdated.txt ]; then
+
+    # If we have results and it's drupal/core.
+    if cat $APP_CODE_DIRECTORY/outdated.txt | grep -xqFe "drupal/core"; then
+      provisioning_write_to_updates_file "ALPHA"
+      else
+        # If we didn't find drupal/core but we do find drupal/ it's most likely contrib.
+        if cat $APP_CODE_DIRECTORY/outdated.txt | grep -xqFe "drupal/"; then
+              provisioning_write_to_updates_file "BETA"
+        fi
+    fi
+
+  fi
+}

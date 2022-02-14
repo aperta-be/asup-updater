@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+#set -ex
 
 # Load some building block functions.
 source /code/app/sh/building_blocks.sh
@@ -11,6 +11,8 @@ ASUP_TIMESTAMP=$(date +%s)
 GIT_USER_NAME="ASUP"
 GIT_USER_EMAIL="asup@support.dazzle.be"
 GIT_BRANCH_SOURCE="security/$ASUP_TIMESTAMP"
+
+APP_CODE_DIRECTORY="/code/project"
 
 # Prerequisites checks and defaults
 source /code/app/sh/prerequisites.sh
@@ -38,6 +40,13 @@ composer_outdated
 composer_update_constraints
 composer_update_drupal_core
 composer_update_drupal_contrib
+
+# Write files for monitoring.
+provisioning_write_updated_date
+provisioning_writes_updates
+echo "tmp: "
+cat $APP_PUBLIC_ROOT_DIRECTORY/asup-up.txt
+
 
 # Cleanup temporary files created in our composer operations.
 composer_cleanup

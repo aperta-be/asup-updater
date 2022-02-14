@@ -23,6 +23,7 @@ SELF_TEST=1
 DRY_RUN=1
 SSH_PUBLIC_KEY=123
 SSH_PRIVATE_KEY=123
+APP_CODE_DIRECTORY=www
 ```
 ### Environment variables explained
 - **GIT_AUTO_MERGE**: If set to 1, it will auto-merge the security branch back into the GIT_BRANCH_TARGET. 
@@ -41,3 +42,4 @@ unless you need to.
 actions are contained to local run.
 - **SSH_PUBLIC_KEY**: Optionally provide a SSH public key. Defaults to 0.
 - **SSH_PRIVATE_KEY**: Optionally provide a SSH private key. Defaults to 0.
+- **APP_CODE_DIRECTORY**: The application's' public accessible directory. Use 0 to use the GIT root. Defaults to web.
