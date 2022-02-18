@@ -39,8 +39,9 @@ source /code/app/sh/composer.sh
 composer_install
 composer_outdated
 composer_update_constraints
-composer_update_drupal_core
-composer_update_drupal_contrib
+#composer_update_drupal_core
+#composer_update_drupal_contrib
+composer_update_all
 
 # Write files for monitoring.
 provisioning_write_updated_date

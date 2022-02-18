@@ -31,23 +31,34 @@ function composer_update_constraints() {
 function composer_update_drupal_core() {
   echo -e "# \e[1;35mCore update via composer\e[0m"
   composer update drupal/core "drupal/core-*" --with-all-dependencies --dry-run
-  COMPOSER_UPDATE_CMD=$(composer update drupal/core "drupal/core-*" --with-all-dependencies)
+  COMPOSER_UPDATE_CMD=$(composer update drupal/core "drupal/core-*" --with-all-dependencies 2>&1)
   # If a patch can not be applied. Back off.
-  if [[ $COMPOSER_UPDATE_CMD == *"Your requirements could not be resolved"* ]] || [[ $COMPOSER_UPDATE_CMD == *"Could not apply patch!"* ]]; then echo -e "# \e[1;31mComposer requirements check failed or could not apply patch!\e[0m"; exit 1; else echo -e "# \e[1;35mCore update OK\e[0m"; fi
+  if echo $COMPOSER_UPDATE_CMD | grep -q "Your requirements could not be resolved\|Could not apply patch!"; then
+    echo -e "# \e[1;31mComposer requirements check failed or could not apply patch!\e[0m"; #exit 1;
+    else echo -e "# \e[1;35mCore update OK\e[0m";
+  fi
 }
 
 function composer_update_drupal_contrib() {
   echo -e "# \e[1;35mContrib update via composer\e[0m"
   composer update --with-all-dependencies --dry-run
+  COMPOSER_UPDATE_CMD=$(composer update "drupal/*" --with-all-dependencies 2>&1)
   # If a patch can not be applied. Back off.
-  if [[ $(composer update drupal/* --with-all-dependencies) == *"Could not apply patch!"* ]]; then echo -e "# \e[1;31mCould not apply patch!\e[0m"; exit 1; else echo -e "# \e[1;35mAll updates OK\e[0m"; fi
+  if echo $COMPOSER_UPDATE_CMD | grep -q "Your requirements could not be resolved\|Could not apply patch!"; then
+    echo -e "# \e[1;31mComposer requirements check failed or could not apply patch!\e[0m"; #exit 1;
+    else echo -e "# \e[1;35mCore update OK\e[0m";
+  fi
 }
 
 function composer_update_all() {
   echo -e "# \e[1;35mFull update via composer\e[0m"
   composer update --with-all-dependencies --dry-run
+  COMPOSER_UPDATE_CMD=$(composer update --with-all-dependencies)
   # If a patch can not be applied. Back off.
-  if [[ $(composer update --with-all-dependencies) == *"Could not apply patch!"* ]]; then echo -e "# \e[1;31mCould not apply patch!\e[0m"; exit 1; else echo -e "# \e[1;35mAll updates OK\e[0m"; fi
+  if echo $COMPOSER_UPDATE_CMD | grep -q "Your requirements could not be resolved\|Could not apply patch!"; then
+    echo -e "# \e[1;31mComposer requirements check failed or could not apply patch!\e[0m"; #exit 1;
+    else echo -e "# \e[1;35mCore update OK\e[0m";
+  fi
 }
 
 # Cleans up files and or folders created during composer actions
