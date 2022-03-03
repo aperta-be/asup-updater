@@ -38,7 +38,14 @@ git_get_code
 source /code/app/sh/composer.sh
 composer_install
 composer_outdated
-composer_update_constraints
+
+if [[ $COMPOSER_UPDATE_CONSTRAINTS == 1 ]]; then
+  composer_update_constraints
+else
+  echo "# COMPOSER_UPDATE_CONSTRAINTS is not 1. Skipping."
+fi
+
+# TODO: Delete unused functions
 #composer_update_drupal_core
 #composer_update_drupal_contrib
 composer_update_all
