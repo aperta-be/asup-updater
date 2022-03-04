@@ -32,12 +32,10 @@ RUN mkdir -p /code/gitlab-api; \
     cd /code/gitlab-api; \
     composer require "m4tthumphrey/php-gitlab-api:^11.7" "guzzlehttp/guzzle:^7.4" "http-interop/http-factory-guzzle:^1.2";
 
-# Remove/comment .env line if not developing locally.
-COPY .env /usr/local/bin/
-
-COPY scripts/start.sh /usr/local/bin/
-COPY scripts/app/sh/* /code/app/sh/
-COPY scripts/app/php/* /code/app/php/
+# Remove .env file before docker build  if not developing locally.
+# TODO: Build docker image with pipelines automatically and allways ignore .env file.
+COPY scripts/start.sh .en[v] /usr/local/bin/
+COPY scripts/app/ /code/app/
 COPY ssh/* /mount/ssh/
 
 ENTRYPOINT ["/usr/local/bin/start.sh"]
