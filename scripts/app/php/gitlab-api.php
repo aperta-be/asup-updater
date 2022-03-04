@@ -9,9 +9,9 @@ $client->authenticate(GITLAB_TOKEN, Gitlab\Client::AUTH_HTTP_TOKEN);
 
 // If GIT_AUTO_MERGE is not true MRs and branches accumulates.
 // Close any previous MR that was not committed and delete source branch.
-$merge_requests=$client->mergeRequests()->all(GITLAB_PROJECT_ID, ['labels'=>'asup']);
+$merge_requests = $client->mergeRequests()->all(GITLAB_PROJECT_ID, ['labels' => 'asup']);
 foreach ($merge_requests as $merge_request){
-  if ($merge_request['state']==="closed") continue;
+  if ($merge_request['state'] === 'closed') { continue; }
   echo '# Close merge request ('. $merge_request['iid'] .')"' . $merge_request['title'] . '"' . PHP_EOL;
   $client->mergeRequests()->update(GITLAB_PROJECT_ID, $merge_request['iid'], ['state_event' => 'close']);
 
