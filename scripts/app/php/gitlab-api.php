@@ -4,7 +4,7 @@ include '/code/gitlab-api/variables.php';
 
 // Token authentication
 $client = new Gitlab\Client();
-$client->setUrl("https://".GITLAB_HOST);
+$client->setUrl('https://' . GITLAB_HOST);
 $client->authenticate(GITLAB_TOKEN, Gitlab\Client::AUTH_HTTP_TOKEN);
 
 // If GIT_AUTO_MERGE is not true MRs and branches accumulates.
