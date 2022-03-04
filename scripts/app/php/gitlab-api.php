@@ -4,8 +4,25 @@ include '/code/gitlab-api/variables.php';
 
 // Token authentication
 $client = new Gitlab\Client();
-$client->setUrl(GITLAB_HOST);
+$client->setUrl('https://' . GITLAB_HOST);
 $client->authenticate(GITLAB_TOKEN, Gitlab\Client::AUTH_HTTP_TOKEN);
+
+// If GIT_AUTO_MERGE is not true MRs and branches accumulates.
+// Close any previous MR that was not committed and delete source branch.
+$merge_requests = $client->mergeRequests()->all(GITLAB_PROJECT_ID, ['labels' => 'asup']);
+foreach ($merge_requests as $merge_request){
+  if ($merge_request['state'] === 'closed') { continue; }
+  echo '# Close merge request ('. $merge_request['iid'] .')"' . $merge_request['title'] . '"' . PHP_EOL;
+  $client->mergeRequests()->update(GITLAB_PROJECT_ID, $merge_request['iid'], ['state_event' => 'close']);
+
+  // Check if source branch exist and delete.
+  $source_branch_name = $merge_request['source_branch'];
+  echo '# Delete branch "' . $source_branch_name . '"' . PHP_EOL;
+  $branch = $client->repositories()->branches(GITLAB_PROJECT_ID, ['search'=>$source_branch_name]);
+  if (!empty($branch)){
+    $client->repositories()->deleteBranch(GITLAB_PROJECT_ID, $source_branch_name);
+  }
+}
 
 // Create the MR.
 $merge_request = $client->mergeRequests()
