@@ -13,6 +13,7 @@ function git_create_dir() {
 }
 
 function git_get_code() {
+  echo -e "# \e[1;35mClone repository $GIT_CLONE_URL branch $GIT_BRANCH_TARGET.\e[0m"
   git clone --branch $GIT_BRANCH_TARGET --progress --verbose $GIT_CLONE_URL .
   # Move to an security branch:
   git checkout -b $GIT_BRANCH_SOURCE
@@ -23,10 +24,17 @@ function git_commit_push() {
   git branch -v
   git status
   git add .
-  git commit -m "Security: Automatic update on ${date}"
-  if [[ $DRY_RUN == 1 ]]; then echo -e "# \e[1;33mDRYRUN: Normally a GIT push would have happened.\e[0m"; else git push origin $GIT_BRANCH_SOURCE; fi
+  git reset -- outdated.txt
+  git commit -m "Security: Automatic update on $(date)"
+  if [[ $DRY_RUN == 1 ]]; then echo -e "# \e[1;33mDRYRUN: Normally a GIT push would have happened.\e[0m";
+  else echo -e "# \e[1;33mPush repository back to Gitlab.\e[0m";
+    git push origin $GIT_BRANCH_SOURCE;
+  fi
 }
 
 function git_branch_merge() {
-  if [[ $DRY_RUN == 1 ]]; then echo -e "# \e[1;33mDRYRUN: Normally a GIT MR/merge would have happened.\e[0m"; else building_blocks_gitlab_api; fi
+  if [[ $DRY_RUN == 1 ]]; then echo -e "# \e[1;33mDRYRUN: Normally a GIT MR/merge would have happened.\e[0m";
+  else echo -e "# \e[1;33mCreate a MR/merge.\e[0m";
+    building_blocks_gitlab_api;
+  fi
 }

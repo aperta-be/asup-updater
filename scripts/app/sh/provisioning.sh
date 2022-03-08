@@ -32,7 +32,7 @@ function provisioning_write_updated_date() {
 function provisioning_write_to_updates_file() {
   if [ $# -eq 0 ]
     then
-      echo "No arguments supplied to write updates file."
+      echo "# \e[1;31mNo arguments supplied to write updates file.\e[0m"
   fi
   echo $1 >> $APP_PUBLIC_ROOT_DIRECTORY/asup-up.txt
 }

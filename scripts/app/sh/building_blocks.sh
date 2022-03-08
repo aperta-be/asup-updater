@@ -5,7 +5,13 @@
 # API integration with Gitlab.
 function building_blocks_gitlab_api() {
   SCRIPT_LOCATION="/code/app/php/gitlab-api.php"
-  if [ -f $SCRIPT_LOCATION ]; then php $SCRIPT_LOCATION; else exit 1; fi
+  if [ -f $SCRIPT_LOCATION ];
+    then GITLAB_API_OUTPUT=$(php $SCRIPT_LOCATION);
+    # Catch PHP Output
+    MERGE_REQUEST_URL=$(echo "$GITLAB_API_OUTPUT" | grep "# Merge request URL: " | sed 's/# Merge request URL: //g')
+    echo "$GITLAB_API_OUTPUT"
+    else exit 1;
+  fi
 }
 
 # Update composer.json constraints to be able to updated to the actual latest version later.
