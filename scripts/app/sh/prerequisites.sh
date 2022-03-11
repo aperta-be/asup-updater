@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Check or set these values.
+echo -e "# \e[1;35mEnvironment variables.\e[0m"
 if ! [ -v ${COMPOSER_UPDATE_CONSTRAINTS+x} ]; then echo "COMPOSER_UPDATE_CONSTRAINTS provided with value: $COMPOSER_UPDATE_CONSTRAINTS"; else echo -e "# \e[1;31mCOMPOSER_UPDATE_CONSTRAINTS not provided. Assuming 0.\e[0m"; COMPOSER_UPDATE_CONSTRAINTS=0; fi
 if ! [ -v ${GIT_AUTO_MERGE+x} ]; then echo "GIT_AUTO_MERGE provided with value: $GIT_AUTO_MERGE"; else GIT_AUTO_MERGE=0; fi
 
@@ -52,6 +53,7 @@ if ! [ -v ${APP_PUBLIC_ROOT_DIRECTORY+x} ]; then
 fi
 
 # Output the version of software we need. This will fail if not installed and it is what we want.
+echo -e "# \e[1;35mEnvironment applications.\e[0m"
 php --version
 composer --version
 patch --version

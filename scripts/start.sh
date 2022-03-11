@@ -5,11 +5,6 @@ ASUP_TIMESTAMP=$(date +%s)
 GIT_USER_NAME="ASUP"
 GIT_USER_EMAIL="asup@support.dazzle.be"
 GIT_BRANCH_SOURCE="security/$ASUP_TIMESTAMP"
-
-# If script runs on a CI environment set APP_CODE_DIRECTORY from CI_PROJECT_DIR.
-#if ! [ -v ${CI_PROJECT_DIR+x} ]; then APP_CODE_DIRECTORY="$CI_PROJECT_DIR"
-#  else APP_CODE_DIRECTORY="/code/project";
-#fi
 APP_CODE_DIRECTORY="/code/project";
 
 # Load some building block functions.
@@ -31,16 +26,14 @@ source /code/app/sh/ssh.sh
 ssh_keys_install
 ssh_keys_validate
 
-# Configure git and create code dir.
+# Configure git and get code.
 source /code/app/sh/git.sh
 git_configure
 git_create_dir
 git_get_code
 
-# Provisioning functions.
-source /code/app/sh/provisioning.sh
 # Create Gitlab API configuration.
-provisioning_write_vars_gitlab
+git_write_vars_gitlab
 
 # Composer functions.
 source /code/app/sh/composer.sh
@@ -61,22 +54,17 @@ fi
 # Do the actual update.
 composer_update_all
 
-# Commit and push our security branch to the origin.
-git_commit_push
+if [[ "$COMPOSER_REPORT" == "Core update OK." ]]; then
+  # Commit and push our security branch to the origin.
+  git_commit_push
 
-# Create MR and/or merge it.
-git_branch_merge
+  # Create MR and/or merge it.
+  git_branch_merge
+fi
 
-# Write files for monitoring.
-# provisioning_write_updated_date
-# provisioning_writes_updates
-
-# Configure git and create code dir.
+# Report results.
 source /code/app/sh/report.sh
 report_mattermost
-
-# Cleanup temporary files created in our composer operations.
-composer_cleanup
 
 if [[ $? == 0 ]]; then echo -e "# \e[1;35mMission accomplished.\e[0m"; else echo -e "# \e[1;31mSome failure occurred at the end. This is bad news.\e[0m"; fi
 

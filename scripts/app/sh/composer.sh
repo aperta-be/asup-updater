@@ -35,19 +35,19 @@ function composer_update_all() {
   echo -e "# \e[1;35mFull update via composer...\e[0m"
   args=()
   [[ $VERBOSE -eq 0 ]] && args+=( '--quiet' )
-  COMPOSER_UPDATE_CMD=$(composer update --with-all-dependencies ${args[@]})
+  COMPOSER_UPDATE_CMD=$(composer update --with-all-dependencies "${args[@]}" 2>&1)
+  [[ $VERBOSE -eq 0 ]] && echo "$COMPOSER_UPDATE_CMD"
   # If a patch can not be applied. Back off.
-  if echo $COMPOSER_UPDATE_CMD | grep -q "Your requirements could not be resolved\|Could not apply patch!"; then
-    echo -e "# \e[1;31mComposer requirements check failed or could not apply patch!\e[0m"; #exit 1;
-    else echo -e "# \e[1;35mCore update OK\e[0m";
+  if echo "$COMPOSER_UPDATE_CMD" | grep -q "Your requirements could not be resolved\|Could not apply patch!"; then
+    COMPOSER_REPORT="Composer requirements check failed or could not apply patch!"
+    echo -e "# \e[1;31m$COMPOSER_REPORT\e[0m"; #exit 1;
+    else
+      if echo "$COMPOSER_UPDATE_CMD" | grep -q "Nothing to install, update or remove"; then
+        COMPOSER_REPORT="No updates required OK."
+        echo -e "# \e[1;35m$COMPOSER_REPORT\e[0m";
+        else
+          COMPOSER_REPORT="Core update OK."
+          echo -e "# \e[1;35m$COMPOSER_REPORT\e[0m";
+      fi
   fi
-}
-
-# Cleans up files and or folders created during composer actions
-function composer_cleanup() {
-  echo -e "# \e[1;35mClean up temporary files\e[0m"
-  rm -rf \
-  outdated.txt \
-  composer.json.before \
-  ;
 }

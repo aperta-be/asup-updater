@@ -24,8 +24,8 @@ function git_commit_push() {
   git branch -v
   git status
   git add .
-  git reset -- outdated.txt
-  git commit -m "Security: Automatic update on $(date)"
+  git reset -- outdated.txt composer.json.before
+  git commit -m "ASUP: Automatic update on $(date)"
   if [[ $DRY_RUN == 1 ]]; then echo -e "# \e[1;33mDRYRUN: Normally a GIT push would have happened.\e[0m";
   else echo -e "# \e[1;33mPush repository back to Gitlab.\e[0m";
     git push origin $GIT_BRANCH_SOURCE;
@@ -37,4 +37,27 @@ function git_branch_merge() {
   else echo -e "# \e[1;33mCreate a MR/merge.\e[0m";
     building_blocks_gitlab_api;
   fi
+}
+
+# Write Gitlab PHP variables file.
+function git_write_vars_gitlab() {
+  cat > /code/gitlab-api/variables.php <<EOL
+    <?php
+    /**
+     * @file
+     *
+     * This file is generated.
+     */
+    const GITLAB_HOST = '$GITLAB_HOST';
+    const GITLAB_TOKEN = '$GITLAB_TOKEN';
+
+    const GITLAB_PROJECT_ID = '$GITLAB_PROJECT_ID';
+    const GIT_BRANCH_SOURCE = '$GIT_BRANCH_SOURCE';
+    const GIT_BRANCH_TARGET = '$GIT_BRANCH_TARGET';
+
+    const GIT_AUTO_MERGE = $GIT_AUTO_MERGE;
+
+    const MERGE_REQUEST_TITLE = 'Automated security MR $ASUP_TIMESTAMP';
+    const MERGE_REQUEST_DESCRIPTION = 'Automated MR by ASUP';
+EOL
 }
