@@ -15,9 +15,11 @@ Example content below:
 COMPOSER_UPDATE_CONSTRAINTS=1
 SELF_TEST=1
 DRY_RUN=1
+VERBOSE=1
 APP_PUBLIC_ROOT_DIRECTORY=www
+MATTERMOST_HOOK="https://mattermost.dazzle.be/hooks/33akt56za7gu7dmxg1wa5bedtr"
 GIT_AUTO_MERGE=1
-GITLAB_HOST="https://gitlab.dazzle.be"
+GITLAB_HOST="gitlab.dazzle.be"
 GITLAB_PROJECT_ID="dazzle/brrc-geoportal"
 GIT_BRANCH_TARGET="test-branch-kevin"
 GIT_CLONE_URL="git@gitlab.dazzle.be:dazzle/brrc-geoportal.git"
@@ -36,8 +38,10 @@ libraries. Defaults to 0.
     unless you need to.
 - **DRY_RUN**: The DRY_RUN parameter will make sure actual git push commands are not executed and that the
   actions are contained to local run.
+- **VERBOSE**: Verbosity level. For now we have only 1.
 - **APP_PUBLIC_ROOT_DIRECTORY**: The application's' public accessible directory. Use 0 to use the GIT root. Defaults to web.
-
+- **MATTERMOST_HOOK**: The Mattermost web hook URL for reports.
+- 
 - **GIT_AUTO_MERGE**: If set to 1, it will auto-merge the security branch back into the GIT_BRANCH_TARGET. 
 Defaults to 0.
 - **GITLAB_HOST**: The hostname without protocol and without a trailing slash.

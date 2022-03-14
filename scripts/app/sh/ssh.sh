@@ -1,6 +1,7 @@
 #!/bin/bash
 
 function ssh_keys_install() {
+  echo -e "# \e[1;35mInstall SSH keys.\e[0m"
   # Install keys
   mkdir -p ~/.ssh
 
@@ -18,5 +19,6 @@ function ssh_keys_install() {
 }
 
 function ssh_keys_validate() {
+  echo -e "# \e[1;35mScan $GITLAB_HOST SSH keys.\e[0m"
   ssh-keyscan -H $GITLAB_HOST >> ~/.ssh/known_hosts
 }
