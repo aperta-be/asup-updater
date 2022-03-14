@@ -6,7 +6,7 @@ function report_mattermost() {
 
   if [[ "$COMPOSER_REPORT" == "Core update OK." ]]; then
     REG='^[master|main]$'
-    if ! [[ $GIT_BRANCH_TARGET =~ $REG ]]; then REPORT="${REPORT}:warning: This branch is not for production a developer has to test and merge with main branch.\n"; fi
+    if ! [[ $GIT_BRANCH_TARGET =~ $REG ]]; then REPORT="${REPORT}:warning: This branch is not for production. A developer has to test and merge with main branch.\n"; fi
     if [[ $GIT_AUTO_MERGE != "1" ]]; then REPORT="${REPORT}:warning: Git auto merge is not enabled. A developer has to approve and merge the request.\n"; fi
     if ! [ -v ${MERGE_REQUEST_URL+x} ]; then REPORT="${REPORT}Merge request URL: ${MERGE_REQUEST_URL}\n"; fi
   fi;
