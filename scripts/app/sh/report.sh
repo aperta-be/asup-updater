@@ -1,8 +1,8 @@
 function report_mattermost() {
 
-  REPORT="##### ASUP Drupal updates report\n"
-  REPORT="${REPORT}Project: ${GITLAB_PROJECT_ID}, Branch: ${GIT_BRANCH_TARGET}\n"
-  REPORT="${REPORT}Update: ${COMPOSER_REPORT}\n"
+  REPORT="##### ${GITLAB_PROJECT_ID} updates report\n"
+  REPORT="${REPORT}**Branch**: ${GIT_BRANCH_TARGET}\n"
+  REPORT="${REPORT}**Update**: ${COMPOSER_REPORT}\n"
 
   if [[ "$COMPOSER_REPORT" == "Core update OK." ]]; then
     REG='^[master|main]$'
