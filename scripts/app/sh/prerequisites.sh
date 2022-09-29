@@ -45,6 +45,7 @@ if ! [ -v ${GIT_CLONE_URL+x} ]; then echo "GIT_CLONE_URL provided with value: $G
 fi
 
 if ! [ -v ${GITLAB_TOKEN+x} ]; then echo "GITLAB_TOKEN provided with value: $GITLAB_TOKEN"; else echo -e "# \e[1;31mGITLAB_TOKEN not provided.\e[0m"; fi
+if ! [ -v ${GITHUB_ASUP_TOKEN+x} ]; then echo "GITHUB_ASUP_TOKEN provided with value: $GITHUB_ASUP_TOKEN"; else echo -e "# \e[1;31mGITHUB_ASUP_TOKEN not provided. This is fatal if the provider is GitHub.\e[0m"; fi
 if ! [ -v ${SSH_PUBLIC_KEY+x} ]; then echo "SSH_PUBLIC_KEY provided with value: $SSH_PUBLIC_KEY"; else echo -e "# \e[1;31mSSH_PUBLIC_KEY not provided. Assuming default.\e[0m"; SSH_PUBLIC_KEY=0; fi
 if ! [ -v ${SSH_PRIVATE_KEY+x} ]; then echo "SSH_PRIVATE_KEY provided, but not printing here for security reasons."; else echo -e "# \e[1;31mSSH_PRIVATE_KEY not provided. Assuming default.\e[0m"; SSH_PRIVATE_KEY=0; fi
 
