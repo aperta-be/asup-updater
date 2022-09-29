@@ -5,9 +5,7 @@ include '/code/api/variables.php';
 
 $client = new \Github\Client();
 
-$token = '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';
-
-$client->authenticate($token, null, Github\AuthMethod::CLIENT_ID);
+$client->authenticate(GITHUB_ASUP_TOKEN, null, Github\AuthMethod::CLIENT_ID);
 $base_path = GITHUB_HOST . '/' . GITHUB_OWNER . '/' . GITHUB_REPO;
 
 // @todo: Add logic to remove any "old" open MR's.
