@@ -5,30 +5,27 @@ include '/code/api/variables.php';
 
 $client = new \Github\Client();
 
-$user = 'Aperta-ASUP';
-$pass = 'n7RRAw&]SYKv';
 $token = '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';
 
 $client->authenticate($token, null, Github\AuthMethod::CLIENT_ID);
 $base_path = GITHUB_HOST . '/' . GITHUB_OWNER . '/' . GITHUB_REPO;
 
-$issue = $client->api('issue')->create(GITHUB_OWNER, GITHUB_REPO, [
-  'title' => MERGE_REQUEST_TITLE,
-  'body' => MERGE_REQUEST_DESCRIPTION,
-]);
-$issue_id = $issue['id'];
-
-print 'Issue ID: ' . $issue_id;
 
 $pull_request = $client->api('pull_request')->create(GITHUB_OWNER, GITHUB_REPO, [
   'base'  => GIT_BRANCH_TARGET,
   'head'  => GIT_BRANCH_SOURCE,
-  'issue' => $issue_id,
+  'title' => MERGE_REQUEST_TITLE,
+  'body' => MERGE_REQUEST_DESCRIPTION,
 ]);
 
-$pull_id = $pull_request['id'];
+$pull_id = $pull_request['number'];
 $sha = $pull_request['head']['sha'];
 $web_path = $base_path . '/pull/' . $pull_id;
+
+// @todo: labels not working yet, probably because GitHub requires it to exists before you can label it.
+$issue = $client->api('issue')->update(GITHUB_OWNER, GITHUB_REPO, $pull_id, [
+  'labels' => 'asup',
+]);
 
 echo '# Created pull request "' . MERGE_REQUEST_TITLE . '"' . PHP_EOL;
 echo '# Pull request URL: ' . $web_path . PHP_EOL;
@@ -42,7 +39,6 @@ if (GIT_AUTO_MERGE === 1) {
   // Merge it.
   try {
     $client->api('pull_request')->merge(GITHUB_OWNER, GITHUB_REPO, $pull_id, 'Automerging.', $sha, $mergeMethod = 'merge', $title = null);
-    $client->api('issue')->update(GITHUB_OWNER, GITHUB_REPO, $issue_id, ['state' => 'closed']);
   }
   catch (Exception $e) {
     echo '# Something went wrong here... Could not merge: ' . $e->getMessage() . PHP_EOL;
