@@ -1,6 +1,16 @@
 function report_mattermost() {
 
-  REPORT="##### ${GITLAB_PROJECT_ID} updates report\n"
+  case $VCS_PROVIDER in
+      gitlab)
+        REPORT="##### Consumer ${CONSUMER} (${VCS_PROVIDER}): ${GITLAB_PROJECT_ID} updates report\n"
+        MERGE_REQUEST_TERM="Merge request"
+      ;;
+      github)
+        REPORT="##### Consumer ${CONSUMER} (${VCS_PROVIDER}): ${GITHUB_OWNER}/${GITHUB_REPO} updates report\n"
+        MERGE_REQUEST_TERM="Pull request"
+      ;;
+    esac
+
   REPORT="${REPORT}**Branch**: ${GIT_BRANCH_TARGET}\n"
   REPORT="${REPORT}**Update**: ${COMPOSER_REPORT}\n"
 
@@ -8,7 +18,7 @@ function report_mattermost() {
     REG='^[master|main]$'
     if ! [[ $GIT_BRANCH_TARGET =~ $REG ]]; then REPORT="${REPORT}:warning: This branch is not for production. A developer has to test and merge with main branch.\n"; fi
     if [[ $GIT_AUTO_MERGE != "1" ]]; then REPORT="${REPORT}:warning: Git auto merge is not enabled. A developer has to approve and merge the request.\n"; fi
-    if ! [ -v ${MERGE_REQUEST_URL+x} ]; then REPORT="${REPORT}Merge request URL: ${MERGE_REQUEST_URL}\n"; fi
+    if ! [ -v ${MERGE_REQUEST_URL+x} ]; then REPORT="${REPORT}${MERGE_REQUEST_TERM}: ${MERGE_REQUEST_URL}\n"; fi
   fi;
 
   OUTDATED_FILE="$(grep 'drupal\|drush' outdated.txt)"

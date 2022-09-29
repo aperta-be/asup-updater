@@ -19,6 +19,14 @@ function ssh_keys_install() {
 }
 
 function ssh_keys_validate() {
-  echo -e "# \e[1;35mScan $GITLAB_HOST SSH keys.\e[0m"
-  ssh-keyscan -H $GITLAB_HOST >> ~/.ssh/known_hosts
+  echo -e "# \e[1;35mScanning SSH keys.\e[0m"
+  case $VCS_PROVIDER in
+    gitlab)
+      HOST=$(echo "$GITLAB_HOST" | sed -e 's#^http://##; s#^https://##')
+    ;;
+    github)
+      HOST=$(echo "$GITHUB_HOST" | sed -e 's#^http://##; s#^https://##')
+    ;;
+  esac
+  ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 }

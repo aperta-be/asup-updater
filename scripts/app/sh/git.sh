@@ -27,7 +27,7 @@ function git_commit_push() {
   git reset -- outdated.txt composer.json.before
   git commit -m "ASUP: Automatic update on $(date)"
   if [[ $DRY_RUN == 1 ]]; then echo -e "# \e[1;33mDRYRUN: Normally a GIT push would have happened.\e[0m";
-  else echo -e "# \e[1;33mPush repository back to Gitlab.\e[0m";
+  else echo -e "# \e[1;33mPush repository back to VCS.\e[0m";
     git push origin $GIT_BRANCH_SOURCE;
   fi
 }
@@ -35,13 +35,19 @@ function git_commit_push() {
 function git_branch_merge() {
   if [[ $DRY_RUN == 1 ]]; then echo -e "# \e[1;33mDRYRUN: Normally a GIT MR/merge would have happened.\e[0m";
   else echo -e "# \e[1;33mCreate a MR/merge.\e[0m";
-    building_blocks_gitlab_api;
+    case $VCS_PROVIDER in
+      gitlab)
+        building_blocks_gitlab_api
+        ;;
+      github)
+        building_blocks_github_api
+    esac
   fi
 }
 
-# Write Gitlab PHP variables file.
-function git_write_vars_gitlab() {
-  cat > /code/gitlab-api/variables.php <<EOL
+# Write VCS PHP variables file.
+function git_write_vars_vcs() {
+  cat > /code/api/variables.php <<EOL
     <?php
     /**
      * @file
@@ -56,6 +62,10 @@ function git_write_vars_gitlab() {
     const GIT_BRANCH_TARGET = '$GIT_BRANCH_TARGET';
 
     const GIT_AUTO_MERGE = $GIT_AUTO_MERGE;
+
+    const GITHUB_HOST = '$GITHUB_HOST';
+    const GITHUB_OWNER = '$GITHUB_OWNER';
+    const GITHUB_REPO = '$GITHUB_REPO';
 
     const MERGE_REQUEST_TITLE = 'Automated security MR $ASUP_TIMESTAMP';
     const MERGE_REQUEST_DESCRIPTION = 'Automated MR by ASUP';

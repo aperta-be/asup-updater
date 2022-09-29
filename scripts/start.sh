@@ -32,8 +32,8 @@ git_configure
 git_create_dir
 git_get_code
 
-# Create Gitlab API configuration.
-git_write_vars_gitlab
+# Create VCS API configuration.
+git_write_vars_vcs
 
 # Composer functions.
 source /code/app/sh/composer.sh
