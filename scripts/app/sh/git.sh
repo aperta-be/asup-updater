@@ -41,6 +41,7 @@ function git_branch_merge() {
         ;;
       github)
         building_blocks_github_api
+        ;;
     esac
   fi
 }
@@ -66,6 +67,7 @@ function git_write_vars_vcs() {
     const GITHUB_HOST = '$GITHUB_HOST';
     const GITHUB_OWNER = '$GITHUB_OWNER';
     const GITHUB_REPO = '$GITHUB_REPO';
+    const GITHUB_ASUP_TOKEN = '$GITHUB_ASUP_TOKEN';
 
     const MERGE_REQUEST_TITLE = 'Automated security MR $ASUP_TIMESTAMP';
     const MERGE_REQUEST_DESCRIPTION = 'Automated MR by ASUP';
