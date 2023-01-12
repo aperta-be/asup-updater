@@ -25,6 +25,7 @@ Test development:
   script:
     - echo "Docker images:"
     - docker images | grep asup
+    - ./test.sh
 
 build_image:
   stage: production
