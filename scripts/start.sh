@@ -64,7 +64,7 @@ fi
 
 # Report results.
 source /code/app/sh/report.sh
-#report_mattermost
+report_mattermost
 
 if [[ $? == 0 ]]; then echo -e "# \e[1;35mMission accomplished.\e[0m"; else echo -e "# \e[1;31mSome failure occurred at the end. This is bad news.\e[0m"; fi
 
