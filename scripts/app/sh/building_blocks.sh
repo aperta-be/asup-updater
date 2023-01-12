@@ -2,14 +2,26 @@
 
 # This file serves as building blocks for function that might (someday) be replaced.
 
-# API integration with Gitlab.
+# API integration with GitLab.
 function building_blocks_gitlab_api() {
   SCRIPT_LOCATION="/code/app/php/gitlab-api.php"
   if [ -f $SCRIPT_LOCATION ];
-    then GITLAB_API_OUTPUT=$(php $SCRIPT_LOCATION);
+    then API_OUTPUT=$(php $SCRIPT_LOCATION);
     # Catch PHP Output
-    MERGE_REQUEST_URL=$(echo "$GITLAB_API_OUTPUT" | grep "# Merge request URL: " | sed 's/# Merge request URL: //g')
-    echo "$GITLAB_API_OUTPUT"
+    MERGE_REQUEST_URL=$(echo "$API_OUTPUT" | grep "# Merge request URL: " | sed 's/# Merge request URL: //g')
+    echo "$API_OUTPUT"
+    else exit 1;
+  fi
+}
+
+# API integration with GitHub.
+function building_blocks_github_api() {
+  SCRIPT_LOCATION="/code/app/php/github-api.php"
+  if [ -f $SCRIPT_LOCATION ];
+    then API_OUTPUT=$(php $SCRIPT_LOCATION);
+    # Catch PHP Output
+    MERGE_REQUEST_URL=$(echo "$API_OUTPUT" | grep "# Pull request URL: " | sed 's/# Pull request URL: //g')
+    echo "$API_OUTPUT"
     else exit 1;
   fi
 }

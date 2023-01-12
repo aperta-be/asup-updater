@@ -1,6 +1,9 @@
 #!/bin/bash
 
 # Check or set these values.
+echo -e "# \e[1;35mVCS provider.\e[0m"
+if ! [ -v ${VCS_PROVIDER+x} ]; then echo "VCS_PROVIDER provided with value: $VCS_PROVIDER"; else echo -e "# \e[1;31mVCS_PROVIDER not provided. This is fatal.\e[0m"; exit 1; fi
+
 echo -e "# \e[1;35mEnvironment variables.\e[0m"
 if ! [ -v ${COMPOSER_UPDATE_CONSTRAINTS+x} ]; then echo "COMPOSER_UPDATE_CONSTRAINTS provided with value: $COMPOSER_UPDATE_CONSTRAINTS"; else echo -e "# \e[1;31mCOMPOSER_UPDATE_CONSTRAINTS not provided. Assuming 0.\e[0m"; COMPOSER_UPDATE_CONSTRAINTS=0; fi
 if ! [ -v ${GIT_AUTO_MERGE+x} ]; then echo "GIT_AUTO_MERGE provided with value: $GIT_AUTO_MERGE"; else GIT_AUTO_MERGE=0; fi
@@ -17,9 +20,13 @@ if ! [ -v ${GITLAB_PROJECT_ID+x} ]; then echo "GITLAB_PROJECT_ID provided with v
   else if ! [ -v ${CI_PROJECT_PATH+x} ]; then
     GITLAB_PROJECT_ID=$CI_PROJECT_PATH
     echo "GITLAB_PROJECT_ID provided by gitlab CI with value: $CI_PROJECT_PATH"
-  else echo -e "# \e[1;31mGITLAB_PROJECT_ID not provided.\e[0m"; exit 1;
+  else echo -e "# \e[1;31mGITLAB_PROJECT_ID not provided.\e[0m";
   fi
 fi
+
+if ! [ -v ${GITHUB_HOST+x} ]; then echo "GITLAB_HOST provided with value: $GITHUB_HOST"; fi
+if ! [ -v ${GITHUB_OWNER+x} ]; then echo "GITHUB_OWNER provided with value: $GITHUB_OWNER"; fi
+if ! [ -v ${GITHUB_REPO+x} ]; then echo "GITHUB_REPO provided with value: $GITHUB_REPO"; fi
 
 if ! [ -v ${GIT_BRANCH_TARGET+x} ]; then echo "GIT_BRANCH_TARGET provided with value: $GIT_BRANCH_TARGET"
   else if ! [ -v ${CI_COMMIT_BRANCH+x} ]; then
@@ -37,7 +44,8 @@ if ! [ -v ${GIT_CLONE_URL+x} ]; then echo "GIT_CLONE_URL provided with value: $G
   fi
 fi
 
-if ! [ -v ${GITLAB_TOKEN+x} ]; then echo "GITLAB_TOKEN provided with value: $GITLAB_TOKEN"; else echo -e "# \e[1;31mGITLAB_TOKEN not provided.\e[0m"; exit 1; fi
+if ! [ -v ${GITLAB_TOKEN+x} ]; then echo "GITLAB_TOKEN provided with value: $GITLAB_TOKEN"; else echo -e "# \e[1;31mGITLAB_TOKEN not provided.\e[0m"; fi
+if ! [ -v ${GITHUB_ASUP_TOKEN+x} ]; then echo "GITHUB_ASUP_TOKEN provided with value: $GITHUB_ASUP_TOKEN"; else echo -e "# \e[1;31mGITHUB_ASUP_TOKEN not provided. This is fatal if the provider is GitHub.\e[0m"; fi
 if ! [ -v ${SSH_PUBLIC_KEY+x} ]; then echo "SSH_PUBLIC_KEY provided with value: $SSH_PUBLIC_KEY"; else echo -e "# \e[1;31mSSH_PUBLIC_KEY not provided. Assuming default.\e[0m"; SSH_PUBLIC_KEY=0; fi
 if ! [ -v ${SSH_PRIVATE_KEY+x} ]; then echo "SSH_PRIVATE_KEY provided, but not printing here for security reasons."; else echo -e "# \e[1;31mSSH_PRIVATE_KEY not provided. Assuming default.\e[0m"; SSH_PRIVATE_KEY=0; fi
 

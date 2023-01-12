@@ -1,6 +1,7 @@
 <?php
-include '/code/gitlab-api/vendor/autoload.php';
-include '/code/gitlab-api/variables.php';
+
+include '/code/api/vendor/autoload.php';
+include '/code/api/variables.php';
 
 // Token authentication
 $client = new Gitlab\Client();
@@ -18,7 +19,7 @@ foreach ($merge_requests as $merge_request){
   // Check if source branch exist and delete.
   $source_branch_name = $merge_request['source_branch'];
   echo '# Delete branch "' . $source_branch_name . '"' . PHP_EOL;
-  $branch = $client->repositories()->branches(GITLAB_PROJECT_ID, ['search'=>$source_branch_name]);
+  $branch = $client->repositories()->branches(GITLAB_PROJECT_ID, ['search' => $source_branch_name]);
   if (!empty($branch)){
     $client->repositories()->deleteBranch(GITLAB_PROJECT_ID, $source_branch_name);
   }
