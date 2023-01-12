@@ -1,3 +1,15 @@
+Build development:
+  tags:
+    - buster
+  only:
+    - develop
+  before_script:
+    - echo "Docker info:"
+    - docker info
+    - docker images | grep asup
+  script:
+    - ./build.sh
+
 build_image:
   tags:
     - buster
