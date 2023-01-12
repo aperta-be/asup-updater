@@ -1,4 +1,5 @@
-FROM php:8-cli-alpine3.16
+ARG PHP_VERSION
+FROM php:${PHP_VERSION}-cli-alpine
 # Set the correct timezone.
 ENV TZ=Europe/Brussels
 
@@ -32,7 +33,7 @@ RUN mkdir -p /code/api; \
     cd /code/api; \
     composer require "m4tthumphrey/php-gitlab-api:^11.7" "knplabs/github-api:^3.0" "guzzlehttp/guzzle:^7.4" "http-interop/http-factory-guzzle:^1.2";
 
-# Remove .env file before docker build  if not developing locally.
+# Remove .env file before docker build if not developing locally.
 # TODO: Build docker image with pipelines automatically and always ignore .env file.
 COPY scripts/start.sh .en[v] /usr/local/bin/
 COPY scripts/app/ /code/app/
