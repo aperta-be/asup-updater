@@ -1,4 +1,9 @@
+stages:
+  - develop
+  - production
+
 Build development:
+  stage: develop
   tags:
     - buster
   only:
@@ -10,7 +15,19 @@ Build development:
   script:
     - ./build.sh
 
+Test development:
+  stage: develop
+  tags:
+    - buster
+  only:
+    - develop
+  needs: ["Build development"]
+  script:
+    - echo "Docker images:"
+    - docker images | grep asup
+
 build_image:
+  stage: production
   tags:
     - buster
   only:
