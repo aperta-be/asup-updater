@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 php:7.4.27-cli-alpine3.15
+FROM php:8-cli-alpine3.16
 # Set the correct timezone.
 ENV TZ=Europe/Brussels
 
