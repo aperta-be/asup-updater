@@ -47,7 +47,7 @@ trigger:test:
   needs:
     - job: factory:develop
       artifacts: true
-    - job: trigger:build
+    - job: trigger:build:develop
 
 
 factory:production:
