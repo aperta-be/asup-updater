@@ -5,8 +5,6 @@ stages:
 
 # Generate child pipelines
 factory:
-  before_script:
-    - ./build.sh
   stage: trigger
   tags:
     - sandbox
@@ -26,6 +24,8 @@ factory:
 # Build releases
 trigger:build:
   stage: build
+  before_script:
+    - ./build.sh
   trigger:
     include:
       - artifact: .gitlab-ci-child-build-dynamic.yml
