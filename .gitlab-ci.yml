@@ -5,6 +5,8 @@ stages:
 
 # Generate child pipelines
 factory:
+  before_script:
+    - ./build.sh
   stage: trigger
   tags:
     - sandbox

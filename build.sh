@@ -23,10 +23,3 @@ GITHUB_ASUP_TOKEN=${GITHUB_ASUP_TOKEN}
 MATTERMOST_HOOK=${MATTERMOST_HOOK}
 
 EOL
-
-phpVersions=("7.4" "8.1" "8.2")
-
-for v in ${phpVersions[@]}; do
-  echo Using docker build with "-t asup:$v --build-arg PHP_VERSION=$v"
-  docker build -t asup:dev-$v --build-arg PHP_VERSION=$v .
-done
