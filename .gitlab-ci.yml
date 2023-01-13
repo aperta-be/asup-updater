@@ -23,7 +23,7 @@ factory:develop:
     # Execute CI factory and pass the last used tag
     - export LAST_TAG="dev"
     - echo "Building ASUP Release ${LAST_TAG}"
-    - ./ci-factory.sh ${LAST_TAG} ${DEV}
+    - ./ci-factory.sh ${LAST_TAG}
     - ./build.sh
 
 # Build develop releases
@@ -52,13 +52,14 @@ trigger:test:
 
 factory:production:
   <<: *factory
+  stage: trigger
   only:
     - master
   script:
     # Execute CI factory and pass the last used tag
     - export LAST_TAG=$(git describe --tags --abbrev=0)
     - echo "Building ASUP Release ${LAST_TAG}"
-    - ./ci-factory.sh ${LAST_TAG} ${DEV}
+    - ./ci-factory.sh ${LAST_TAG}
     - ./build.sh
 
 # Build releases
