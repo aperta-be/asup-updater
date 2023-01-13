@@ -13,6 +13,7 @@ factory:
   script:
     # Execute CI factory and pass the last used tag
     - export LAST_TAG=$(git describe --tags --abbrev=0)
+    - export DEV_TAG="dev-"
     - echo "Building ASUP Release ${LAST_TAG}"
     - ./ci-factory.sh ${LAST_TAG}
     - ./build.sh
