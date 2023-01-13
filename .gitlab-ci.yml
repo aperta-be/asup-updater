@@ -13,9 +13,9 @@ factory:
   script:
     # Execute CI factory and pass the last used tag
     - export LAST_TAG=$(git describe --tags --abbrev=0)
-    - export DEV_TAG="dev-"
+    - export DEV="dev-"
     - echo "Building ASUP Release ${LAST_TAG}"
-    - ./ci-factory.sh ${LAST_TAG}
+    - ./ci-factory.sh ${LAST_TAG} ${DEV}
     - ./build.sh
   artifacts:
     expire_in: 1 week
