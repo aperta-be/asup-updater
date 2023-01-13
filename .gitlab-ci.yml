@@ -15,42 +15,42 @@ stages:
       - .gitlab-ci-child-build-dynamic.yml
       - .gitlab-ci-child-test-dynamic.yml
 
-factory develop:
+factory:develop:
   <<: *factory
   only:
     - develop
   script:
     # Execute CI factory and pass the last used tag
-    - export LAST_TAG="dev-"
+    - export LAST_TAG="dev"
     - echo "Building ASUP Release ${LAST_TAG}"
     - ./ci-factory.sh ${LAST_TAG} ${DEV}
     - ./build.sh
 
-# Build releases
-trigger:build:
+# Build develop releases
+trigger:build:develop:
   stage: build
   trigger:
     include:
       - artifact: .gitlab-ci-child-build-dynamic.yml
-        job: factory develop
+        job: factory:develop
   needs:
-    - job: factory develop
+    - job: factory:develop
       artifacts: true
 
-# Test releases
+# Test develop releases
 trigger:test:
   stage: test
   trigger:
     include:
       - artifact: .gitlab-ci-child-test-dynamic.yml
-        job: factory develop
+        job: factory:develop
   needs:
-    - job: factory develop
+    - job: factory:develop
       artifacts: true
     - job: trigger:build
 
 
-factory production:
+factory:production:
   <<: *factory
   only:
     - master
@@ -60,3 +60,14 @@ factory production:
     - echo "Building ASUP Release ${LAST_TAG}"
     - ./ci-factory.sh ${LAST_TAG} ${DEV}
     - ./build.sh
+
+# Build releases
+trigger:build:production:
+  stage: build
+  trigger:
+    include:
+      - artifact: .gitlab-ci-child-build-dynamic.yml
+        job: factory:production
+  needs:
+    - job: factory:production
+      artifacts: true
