@@ -4,19 +4,10 @@ stages:
   - test
 
 # Generate child pipelines
-factory:
+.factory: &factory
   stage: trigger
   tags:
     - sandbox
-  only:
-    - develop
-  script:
-    # Execute CI factory and pass the last used tag
-    - export LAST_TAG=$(git describe --tags --abbrev=0)
-    - export DEV="dev-"
-    - echo "Building ASUP Release ${LAST_TAG}"
-    - ./ci-factory.sh ${LAST_TAG} ${DEV}
-    - ./build.sh
   artifacts:
     expire_in: 1 week
     paths:
@@ -24,15 +15,26 @@ factory:
       - .gitlab-ci-child-build-dynamic.yml
       - .gitlab-ci-child-test-dynamic.yml
 
+factory develop:
+  <<: *factory
+  only:
+    - develop
+  script:
+    # Execute CI factory and pass the last used tag
+    - export LAST_TAG="dev-"
+    - echo "Building ASUP Release ${LAST_TAG}"
+    - ./ci-factory.sh ${LAST_TAG} ${DEV}
+    - ./build.sh
+
 # Build releases
 trigger:build:
   stage: build
   trigger:
     include:
       - artifact: .gitlab-ci-child-build-dynamic.yml
-        job: factory
+        job: factory develop
   needs:
-    - job: factory
+    - job: factory develop
       artifacts: true
 
 # Test releases
@@ -41,8 +43,20 @@ trigger:test:
   trigger:
     include:
       - artifact: .gitlab-ci-child-test-dynamic.yml
-        job: factory
+        job: factory develop
   needs:
-    - job: factory
+    - job: factory develop
       artifacts: true
     - job: trigger:build
+
+
+factory production:
+  <<: *factory
+  only:
+    - master
+  script:
+    # Execute CI factory and pass the last used tag
+    - export LAST_TAG=$(git describe --tags --abbrev=0)
+    - echo "Building ASUP Release ${LAST_TAG}"
+    - ./ci-factory.sh ${LAST_TAG} ${DEV}
+    - ./build.sh

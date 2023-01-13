@@ -13,13 +13,11 @@ for PHP_VERSION in $(cat php_versions); do
 
   cat .gitlab-ci-child-build-template.yml |
     sed "s/<PHP_VERSION>/${PHP_VERSION}/g" |
-    sed "s/<DEV>/${DEV}/g" |
     sed "s/<TAG>/${RELEASE}/g" |
     sed "s/<DOCKERFILE>/${DOCKERFILE}/g" >> .gitlab-ci-child-build-dynamic.yml
 
   cat .gitlab-ci-child-test-template.yml |
     sed "s/<PHP_VERSION>/${PHP_VERSION}/g" |
-    sed "s/<DEV>/${DEV}/g" |
     sed "s/<TAG>/${RELEASE}/g" |
     sed "s/<DOCKERFILE>/${DOCKERFILE}/g" >> .gitlab-ci-child-test-dynamic.yml
 
