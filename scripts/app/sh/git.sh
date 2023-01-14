@@ -15,7 +15,7 @@ function git_create_dir() {
 function git_get_code() {
   echo -e "# \e[1;35mClone repository $GIT_CLONE_URL branch $GIT_BRANCH_TARGET.\e[0m"
   git clone --branch $GIT_BRANCH_TARGET --progress --verbose $GIT_CLONE_URL .
-  # Move to an security branch:
+  # Move to an asup branch:
   git checkout -b $GIT_BRANCH_SOURCE
 }
 
@@ -69,7 +69,7 @@ function git_write_vars_vcs() {
     const GITHUB_REPO = '$GITHUB_REPO';
     const GITHUB_ASUP_TOKEN = '$GITHUB_ASUP_TOKEN';
 
-    const MERGE_REQUEST_TITLE = 'Automated security MR $ASUP_TIMESTAMP';
+    const MERGE_REQUEST_TITLE = 'Automated ASUP MR $ASUP_TIMESTAMP';
     const MERGE_REQUEST_DESCRIPTION = 'Automated MR by ASUP';
 EOL
 }

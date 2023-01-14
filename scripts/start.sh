@@ -4,7 +4,7 @@
 ASUP_TIMESTAMP=$(date +%s)
 GIT_USER_NAME="ASUP"
 GIT_USER_EMAIL="asup@support.dazzle.be"
-GIT_BRANCH_SOURCE="security/$ASUP_TIMESTAMP"
+GIT_BRANCH_SOURCE="asup/$ASUP_TIMESTAMP"
 APP_CODE_DIRECTORY="/code/project";
 
 # Load some building block functions.
@@ -55,7 +55,7 @@ fi
 composer_update_all
 
 if [[ "$COMPOSER_REPORT" == "Core update OK." ]]; then
-  # Commit and push our security branch to the origin.
+  # Commit and push our asup branch to the origin.
   git_commit_push
 
   # Create MR and/or merge it.

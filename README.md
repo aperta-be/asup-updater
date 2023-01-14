@@ -42,7 +42,7 @@ libraries. Defaults to 0.
 - **APP_PUBLIC_ROOT_DIRECTORY**: The application's' public accessible directory. Use 0 to use the GIT root. Defaults to web.
 - **MATTERMOST_HOOK**: The Mattermost web hook URL for reports.
 - 
-- **GIT_AUTO_MERGE**: If set to 1, it will auto-merge the security branch back into the GIT_BRANCH_TARGET. 
+- **GIT_AUTO_MERGE**: If set to 1, it will auto-merge the asup branch back into the GIT_BRANCH_TARGET. 
 Defaults to 0.
 - **GITLAB_HOST**: The hostname without protocol and without a trailing slash.
 - **GITLAB_PROJECT_ID**: The project ID. This is normally the part that follows behind the GITLAB_HOST.
