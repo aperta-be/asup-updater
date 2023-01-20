@@ -3,9 +3,8 @@
 GITHUB_ASUP_TOKEN="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"
 MATTERMOST_HOOK="https://mattermost.dazzle.be/hooks/f8rb7d4fufnu3m4qbcdrauhuge"
 
-source build.sh
-
 for v in $(cat php_versions); do
+  source build.sh "develop-${v}"
   # Check if a dedicated Dockerfile exist.
     DOCKERFILE="Dockerfile"
     if test -f "Dockerfile-${v}"; then
