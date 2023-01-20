@@ -9,6 +9,9 @@ for PHP_VERSION in $(cat php_versions); do
   DOCKERFILE="Dockerfile"
   if test -f "Dockerfile-${PHP_VERSION}"; then
     DOCKERFILE="Dockerfile-${PHP_VERSION}"
+  else
+    echo "Dockerfile-${PHP_VERSION} not found"
+    exit 1
   fi
 
   cat .gitlab-ci-child-build-template.yml |
