@@ -16,8 +16,8 @@ stages:
 
 factory:develop:
   <<: *factory
-  only:
-    - develop
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
   script:
     # Execute CI factory and pass the last used tag
     - export LAST_TAG="dev"
@@ -27,7 +27,10 @@ factory:develop:
 # Build develop releases
 trigger:build:develop:
   stage: build
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
   trigger:
+    strategy: depend
     include:
       - artifact: .gitlab-ci-child-build-dynamic.yml
         job: factory:develop
@@ -38,6 +41,8 @@ trigger:build:develop:
 # Test develop releases
 trigger:test:
   stage: test
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
   trigger:
     include:
       - artifact: .gitlab-ci-child-test-dynamic.yml
@@ -51,8 +56,11 @@ trigger:test:
 factory:production:
   <<: *factory
   stage: trigger
-  only:
-    - tags
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: never
+    - if: $CI_COMMIT_TAG
+      when: always
   script:
     # Execute CI factory and pass the last used tag
     - export LAST_TAG=$(git describe --tags --abbrev=0)
@@ -62,9 +70,13 @@ factory:production:
 # Build releases
 trigger:build:production:
   stage: build
-  only:
-    - tags
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+      when: never
+    - if: $CI_COMMIT_TAG
+      when: always
   trigger:
+    strategy: depend
     include:
       - artifact: .gitlab-ci-child-build-dynamic.yml
         job: factory:production

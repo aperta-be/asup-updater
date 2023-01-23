@@ -2,7 +2,6 @@
 
 # If no release tag provided fallback to 0.0
 [ -z "$1" ] && export RELEASE="0.0" || RELEASE="$1"
-[ -z "$2" ] && export DEV="" || DEV=$2
 
 for PHP_VERSION in $(cat php_versions); do
   # Check if a dedicated Dockerfile exist.
