@@ -35,12 +35,20 @@ function composer_update_all() {
   echo -e "# \e[1;35mFull update via composer...\e[0m"
   args=()
   [[ $VERBOSE -eq 0 ]] && args+=( '--quiet' )
-  COMPOSER_UPDATE_CMD=$(composer update --with-all-dependencies "${args[@]}" 2>&1)
-  [[ $VERBOSE -eq 0 ]] && echo "$COMPOSER_UPDATE_CMD"
+  COMPOSER_UPDATE_CMD=$(COMPOSER_DISCARD_CHANGES=true COMPOSER_MEMORY_LIMIT=-1 composer update --with-all-dependencies --no-interaction "${args[@]}" 2>&1)
+  exit_code=$?
+  if [ $exit_code -ne 0 ]; then
+    echo "$COMPOSER_UPDATE_CMD"
+    echo -e "# \e[1;31mComposer command exited with a non-zero status code: $exit_code\e[0m"; exit 1;
+    exit 1
+  fi
+
+  [[ $VERBOSE -eq 1 ]] && echo "$COMPOSER_UPDATE_CMD"
+
   # If a patch can not be applied. Back off.
   if echo "$COMPOSER_UPDATE_CMD" | grep -q "Your requirements could not be resolved\|Could not apply patch!"; then
     COMPOSER_REPORT="Composer requirements check failed or could not apply patch!"
-    echo -e "# \e[1;31m$COMPOSER_REPORT\e[0m"; #exit 1;
+    echo -e "# \e[1;31m$COMPOSER_REPORT\e[0m"; exit 1;
     else
       if echo "$COMPOSER_UPDATE_CMD" | grep -q "Nothing to install, update or remove"; then
         COMPOSER_REPORT="No updates required OK."
