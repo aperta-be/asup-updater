@@ -22,10 +22,10 @@ function ssh_keys_validate() {
   echo -e "# \e[1;35mScanning SSH keys.\e[0m"
   case $VCS_PROVIDER in
     gitlab)
-      HOST=$(echo "$GITLAB_HOST" | sed -e 's#^http://##; s#^https://##')
+      HOST=$(echo "$GIT_HOST" | sed -e 's#^http://##; s#^https://##')
     ;;
     github)
-      HOST=$(echo "$GITHUB_HOST" | sed -e 's#^http://##; s#^https://##')
+      HOST=$(echo "$GIT_HOST" | sed -e 's#^http://##; s#^https://##')
     ;;
   esac
   ssh-keyscan -H $HOST >> ~/.ssh/known_hosts

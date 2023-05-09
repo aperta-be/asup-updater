@@ -1,13 +1,14 @@
 #!/bin/bash
-
-GITHUB_ASUP_TOKEN="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"
-MATTERMOST_HOOK="https://mattermost.dazzle.be/hooks/f8rb7d4fufnu3m4qbcdrauhuge"
+# ##################################################
+# Build Docker images for all PHP versions.
+# ##################################################
 
 for v in $(cat php_versions); do
+  # Generate test .env file for each PHP version.
   source generate-env.sh "develop-${v}"
   # Check if a dedicated Dockerfile exist.
     DOCKERFILE="Dockerfile"
-    if test DOCKERFILE; then
+    if test -f DOCKERFILE; then
       echo There is a Dockerfile. It needs to be removed.
     fi
     if test -f "Dockerfile-${v}"; then

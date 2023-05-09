@@ -2,11 +2,11 @@ function report_mattermost() {
 
   case $VCS_PROVIDER in
       gitlab)
-        REPORT="##### Consumer ${CONSUMER} (${VCS_PROVIDER}): ${GITLAB_PROJECT_ID} updates report\n"
+        REPORT="##### Consumer ${CONSUMER} (${VCS_PROVIDER}): ${GIT_PROJECT} updates report\n"
         MERGE_REQUEST_TERM="Merge request"
       ;;
       github)
-        REPORT="##### Consumer ${CONSUMER} (${VCS_PROVIDER}): ${GITHUB_OWNER}/${GITHUB_REPO} updates report\n"
+        REPORT="##### Consumer ${CONSUMER} (${VCS_PROVIDER}): ${GIT_NAMESPACE}/${GIT_PROJECT} updates report\n"
         MERGE_REQUEST_TERM="Pull request"
       ;;
     esac

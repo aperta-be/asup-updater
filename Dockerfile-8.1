@@ -35,7 +35,8 @@ RUN mkdir -p /code/api; \
 
 # Remove .env file before docker build if not developing locally.
 # TODO: Build docker image with pipelines automatically and always ignore .env file.
-COPY scripts/start.sh .en[v] /usr/local/bin/
+# COPY scripts/start.sh .en[v] /usr/local/bin/
+COPY scripts/start.sh /usr/local/bin/
 COPY scripts/app/ /code/app/
 COPY ssh/* /mount/ssh/
 

@@ -5,13 +5,13 @@ include '/code/api/variables.php';
 
 $client = new \Github\Client();
 
-$client->authenticate(GITHUB_ASUP_TOKEN, null, Github\AuthMethod::CLIENT_ID);
-$base_path = GITHUB_HOST . '/' . GITHUB_OWNER . '/' . GITHUB_REPO;
+$client->authenticate(GIT_APERTA_TOKEN, null, Github\AuthMethod::CLIENT_ID);
+$base_path = GIT_HOST . '/' . GIT_NAMESPACE . '/' . GIT_PROJECT;
 
 // @todo: Add logic to remove any "old" open MR's.
 // This doesn't seem to easy since the GitHub API doesn't allow much flexibility in "listing/searching".
 
-$pull_request = $client->api('pull_request')->create(GITHUB_OWNER, GITHUB_REPO, [
+$pull_request = $client->api('pull_request')->create(GIT_NAMESPACE, GIT_PROJECT, [
   'base'  => GIT_BRANCH_TARGET,
   'head'  => GIT_BRANCH_SOURCE,
   'title' => MERGE_REQUEST_TITLE,
@@ -23,7 +23,7 @@ $sha = $pull_request['head']['sha'];
 $web_path = $base_path . '/pull/' . $pull_id;
 
 
-$issue = $client->api('issue')->update(GITHUB_OWNER, GITHUB_REPO, $pull_id, [
+$issue = $client->api('issue')->update(GIT_NAMESPACE, GIT_PROJECT, $pull_id, [
   'labels' => ['asup'],
 ]);
 
@@ -38,7 +38,7 @@ if (GIT_AUTO_MERGE === 1) {
 
   // Merge it.
   try {
-    $client->api('pull_request')->merge(GITHUB_OWNER, GITHUB_REPO, $pull_id, 'Automerging.', $sha, $mergeMethod = 'merge', $title = null);
+    $client->api('pull_request')->merge(GIT_NAMESPACE, GIT_PROJECT, $pull_id, 'Automerging.', $sha, $mergeMethod = 'merge', $title = null);
   }
   catch (Exception $e) {
     echo '# Something went wrong here... Could not merge: ' . $e->getMessage() . PHP_EOL;
@@ -48,11 +48,11 @@ if (GIT_AUTO_MERGE === 1) {
       echo '=> This error should not be happening in any normal case.' . PHP_EOL;
       echo '=> Closing this MR as part of my cleanup.' . PHP_EOL;
 
-      $issue = $client->api('issue')->update(GITHUB_OWNER, GITHUB_REPO, $pull_id, [
+      $issue = $client->api('issue')->update(GIT_NAMESPACE, GIT_PROJECT, $pull_id, [
         'labels' => ['asup_error_closure'],
       ]);
 
-      $client->api('pull_request')->update(GITHUB_OWNER, GITHUB_REPO, $pull_id, [
+      $client->api('pull_request')->update(GIT_NAMESPACE, GIT_PROJECT, $pull_id, [
         'state' => 'closed',
         'body' => 'Could not automatically merge. Closing.',
         ]);

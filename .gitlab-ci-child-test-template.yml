@@ -7,5 +7,9 @@ test_image:<PHP_VERSION>:
     #- docker info
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker run $CI_REGISTRY_IMAGE:<TAG>-<PHP_VERSION>
+    - if [[ "<TAG>" == "dev" ]]; then ./generate-env.sh "develop-<PHP_VERSION>"; fi;
+    - echo "Test Gihub VCS"
+    - docker run --env-file='.env_github' $CI_REGISTRY_IMAGE:<TAG>-<PHP_VERSION>
+    - echo "Test Gilab VCS"
+    - docker run --env-file='.env_gitlab' $CI_REGISTRY_IMAGE:<TAG>-<PHP_VERSION>
 

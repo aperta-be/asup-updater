@@ -1,63 +1,144 @@
 #!/bin/bash
 
-# Check or set these values.
-echo -e "# \e[1;35mVCS provider.\e[0m"
-if ! [ -v ${VCS_PROVIDER+x} ]; then echo "VCS_PROVIDER provided with value: $VCS_PROVIDER"; else echo -e "# \e[1;31mVCS_PROVIDER not provided. This is fatal.\e[0m"; exit 1; fi
-
+# Check or fall back and set those values.
 echo -e "# \e[1;35mEnvironment variables.\e[0m"
-if ! [ -v ${COMPOSER_UPDATE_CONSTRAINTS+x} ]; then echo "COMPOSER_UPDATE_CONSTRAINTS provided with value: $COMPOSER_UPDATE_CONSTRAINTS"; else echo -e "# \e[1;31mCOMPOSER_UPDATE_CONSTRAINTS not provided. Assuming 0.\e[0m"; COMPOSER_UPDATE_CONSTRAINTS=0; fi
-if ! [ -v ${GIT_AUTO_MERGE+x} ]; then echo "GIT_AUTO_MERGE provided with value: $GIT_AUTO_MERGE"; else GIT_AUTO_MERGE=0; fi
+echo "SELF_TEST provided with value: $SELF_TEST"
+echo "DRY_RUN provided with value: $DRY_RUN"
+echo "VERBOSE provided with value: $VERBOSE"
 
-if ! [ -v ${GITLAB_HOST+x} ]; then echo "GITLAB_HOST provided with value: $GITLAB_HOST"
-  else if ! [ -v ${CI_SERVER_HOST+x} ]; then
-    GITLAB_HOST=$CI_SERVER_HOST
-    echo "GITLAB_HOST provided by gitlab CI with value: $CI_SERVER_HOST"
-  else GITLAB_HOST="gitlab.dazzle.be"
-  fi
+
+if ! [ -v ${COMPOSER_UPDATE_CONSTRAINTS+x} ]; then
+  echo "COMPOSER_UPDATE_CONSTRAINTS provided with value: $COMPOSER_UPDATE_CONSTRAINTS"
+else
+  echo -e "# \e[1;31mCOMPOSER_UPDATE_CONSTRAINTS not provided. Assuming 0.\e[0m"
+  COMPOSER_UPDATE_CONSTRAINTS=0
 fi
-
-if ! [ -v ${GITLAB_PROJECT_ID+x} ]; then echo "GITLAB_PROJECT_ID provided with value: $GITLAB_PROJECT_ID"
-  else if ! [ -v ${CI_PROJECT_PATH+x} ]; then
-    GITLAB_PROJECT_ID=$CI_PROJECT_PATH
-    echo "GITLAB_PROJECT_ID provided by gitlab CI with value: $CI_PROJECT_PATH"
-  else echo -e "# \e[1;31mGITLAB_PROJECT_ID not provided.\e[0m";
-  fi
-fi
-
-if ! [ -v ${GITHUB_HOST+x} ]; then echo "GITLAB_HOST provided with value: $GITHUB_HOST"; fi
-if ! [ -v ${GITHUB_OWNER+x} ]; then echo "GITHUB_OWNER provided with value: $GITHUB_OWNER"; fi
-if ! [ -v ${GITHUB_REPO+x} ]; then echo "GITHUB_REPO provided with value: $GITHUB_REPO"; fi
-
-if ! [ -v ${GIT_BRANCH_TARGET+x} ]; then echo "GIT_BRANCH_TARGET provided with value: $GIT_BRANCH_TARGET"
-  else if ! [ -v ${CI_COMMIT_BRANCH+x} ]; then
-    GIT_BRANCH_TARGET=$CI_COMMIT_BRANCH
-    echo "GIT_BRANCH_TARGET provided by gitlab CI with value: $CI_COMMIT_BRANCH"
-  else echo -e "# \e[1;31mGIT_BRANCH_TARGET not provided.\e[0m"; exit 1
-  fi
-fi
-
-if ! [ -v ${GIT_CLONE_URL+x} ]; then echo "GIT_CLONE_URL provided with value: $GIT_CLONE_URL"
-  else if ! [ -v ${CI_SERVER_HOST+x} ] && ! [ -v ${CI_PROJECT_PATH+x} ]; then
-    GIT_CLONE_URL="git@"$CI_SERVER_HOST":"$CI_PROJECT_PATH".git"
-    echo "GIT_CLONE_URL was built by gitlab CI with value: $GIT_CLONE_URL"
-  else echo -e "# \e[1;31mGIT_BRANCH_TARGET not provided.\e[0m"; exit 1
-  fi
-fi
-
-if ! [ -v ${GITLAB_TOKEN+x} ]; then echo "GITLAB_TOKEN provided with value: $GITLAB_TOKEN"; else echo -e "# \e[1;31mGITLAB_TOKEN not provided.\e[0m"; fi
-if ! [ -v ${GITHUB_ASUP_TOKEN+x} ]; then echo "GITHUB_ASUP_TOKEN provided with value: $GITHUB_ASUP_TOKEN"; else echo -e "# \e[1;31mGITHUB_ASUP_TOKEN not provided. This is fatal if the provider is GitHub.\e[0m"; fi
-if ! [ -v ${SSH_PUBLIC_KEY+x} ]; then echo "SSH_PUBLIC_KEY provided with value: $SSH_PUBLIC_KEY"; else echo -e "# \e[1;31mSSH_PUBLIC_KEY not provided. Assuming default.\e[0m"; SSH_PUBLIC_KEY=0; fi
-if ! [ -v ${SSH_PRIVATE_KEY+x} ]; then echo "SSH_PRIVATE_KEY provided, but not printing here for security reasons."; else echo -e "# \e[1;31mSSH_PRIVATE_KEY not provided. Assuming default.\e[0m"; SSH_PRIVATE_KEY=0; fi
 
 if ! [ -v ${APP_PUBLIC_ROOT_DIRECTORY+x} ]; then
   if [[ $APP_PUBLIC_ROOT_DIRECTORY == 0 ]]; then
-    echo "APP_PUBLIC_ROOT_DIRECTORY (0) default to GIT root: $APP_CODE_DIRECTORY";
-    APP_PUBLIC_ROOT_DIRECTORY=$APP_CODE_DIRECTORY;
-    else
-      echo "APP_PUBLIC_ROOT_DIRECTORY provided with value: $APP_PUBLIC_ROOT_DIRECTORY";
-      APP_PUBLIC_ROOT_DIRECTORY=$APP_CODE_DIRECTORY/$APP_PUBLIC_ROOT_DIRECTORY;
+    echo "APP_PUBLIC_ROOT_DIRECTORY (0) default to GIT root: $APP_CODE_DIRECTORY"
+    APP_PUBLIC_ROOT_DIRECTORY=$APP_CODE_DIRECTORY
+  else
+    echo "APP_PUBLIC_ROOT_DIRECTORY provided with value: $APP_PUBLIC_ROOT_DIRECTORY"
+    APP_PUBLIC_ROOT_DIRECTORY=$APP_CODE_DIRECTORY/$APP_PUBLIC_ROOT_DIRECTORY
   fi
-  else echo -e "# \e[1;31mAPP_PUBLIC_ROOT_DIRECTORY not provided. Assuming web.\e[0m"; APP_PUBLIC_ROOT_DIRECTORY="web";
+else
+  echo -e "# \e[1;31mAPP_PUBLIC_ROOT_DIRECTORY not provided. Assuming web.\e[0m"
+  APP_PUBLIC_ROOT_DIRECTORY="web"
+fi
+
+echo "MATTERMOST_HOOK provided with value: ${MATTERMOST_HOOK::-18}..."
+
+if ! [ -v ${GIT_AUTO_MERGE+x} ]; then
+  echo "GIT_AUTO_MERGE provided with value: $GIT_AUTO_MERGE"
+else
+  echo "GIT_AUTO_MERGE not provided fallback to: $GIT_AUTO_MERGE"
+  GIT_AUTO_MERGE=0
+fi
+
+if ! [ -v ${VCS_PROVIDER+x} ]; then
+  echo "VCS_PROVIDER provided with value: $VCS_PROVIDER"
+else
+  if ! [ -v ${CI+x} ]; then
+    VCS_PROVIDER="gitlab"
+    echo "VCS_PROVIDER not provided. Assuming VCS is gitlab as the container executed from a pipeline: $VCS_PROVIDER"
+  else
+    echo -e "# \e[1;31mVCS_PROVIDER not provided. This is fatal.\e[0m"
+    exit 1
+  fi
+fi
+
+if ! [ -v ${GIT_HOST+x} ]; then
+  echo "GIT_HOST provided with value: $GIT_HOST"
+else
+  if ! [ -v ${CI_SERVER_HOST+x} ]; then
+    GIT_HOST=$CI_SERVER_HOST
+    echo "GIT_HOST provided by gitlab CI with value: $CI_SERVER_HOST"
+  else
+    echo -e "# \e[1;31mGIT_HOST not provided. This is fatal.\e[0m"
+    exit 1
+  fi
+fi
+
+if ! [ -v ${GIT_NAMESPACE+x} ]; then
+  echo "GIT_NAMESPACE provided with value: $GIT_NAMESPACE"
+else
+  if ! [ -v ${CI_PROJECT_NAMESPACE+x} ]; then
+    GIT_NAMESPACE=$CI_PROJECT_NAMESPACE
+    echo "GIT_NAMESPACE provided by gitlab CI with value: $GIT_NAMESPACE"
+  else
+    echo -e "# \e[1;31GIT_NAMESPACE not provided. This is fatal.\e[0m"
+    exit 1
+  fi
+fi
+
+if ! [ -v ${GIT_PROJECT+x} ]; then
+  echo "GIT_PROJECT provided with value: $GIT_PROJECT"
+else
+  if ! [ -v ${CI_PROJECT_NAME+x} ]; then
+    GIT_PROJECT=$CI_PROJECT_NAME
+    echo "GIT_PROJECT provided by gitlab CI with value: $CI_PROJECT_NAME"
+  else
+    echo -e "# \e[1;31mGIT_PROJECT not provided. This is fatal.\e[0m"
+    exit 1
+  fi
+fi
+
+if ! [ -v ${GIT_BRANCH_TARGET+x} ]; then
+  echo "GIT_BRANCH_TARGET provided with value: $GIT_BRANCH_TARGET"
+else
+  if ! [ -v ${CI_COMMIT_BRANCH+x} ]; then
+    GIT_BRANCH_TARGET=$CI_COMMIT_BRANCH
+    echo "GIT_BRANCH_TARGET provided by gitlab CI with value: $CI_COMMIT_BRANCH"
+  else
+    echo -e "# \e[1;31mGIT_BRANCH_TARGET not provided. This is fatal.\e[0m"
+    exit 1
+  fi
+fi
+
+if ! [ -v ${GIT_CLONE_URL+x} ]; then
+  echo "GIT_CLONE_URL provided with value: $GIT_CLONE_URL"
+else
+  if ! [ -v ${CI_SERVER_HOST+x} ] && ! [ -v ${CI_PROJECT_PATH+x} ]; then
+    GIT_CLONE_URL="git@"$CI_SERVER_HOST":"$CI_PROJECT_PATH".git"
+    echo "GIT_CLONE_URL was built by gitlab CI with value: $GIT_CLONE_URL"
+  else
+    echo -e "# \e[1;31mGIT_CLONE_URL not provided. This is fatal.\e[0m"
+    exit 1
+  fi
+fi
+
+if ! [ -v ${GIT_APERTA_USER+x} ]; then
+  echo "GIT_APERTA_USER provided with value: $GIT_APERTA_USER"
+else
+  if ! [ -v ${CI+x} ]; then
+    GIT_APERTA_USER="gitlab-ci-token"
+    echo "GIT_APERTA_USER fallback to CI user: $GIT_APERTA_USER"
+  else
+    echo -e "# \e[1;31mGIT_APERTA_USER not provided.\e[0m"
+  fi
+fi
+
+if ! [ -v ${GIT_APERTA_TOKEN+x} ]; then
+  echo "GIT_APERTA_TOKEN provided with value: $GIT_APERTA_TOKEN"
+else
+
+  if ! [ -v ${CI_JOB_TOKEN+x} ]; then
+    GIT_APERTA_TOKEN=$CI_JOB_TOKEN
+    echo "GIT_APERTA_TOKEN fallback to CI user: ${GIT_APERTA_USER::-18}"
+  else
+    echo -e "# \e[1;31mGIT_APERTA_TOKEN not provided. This is fatal.\e[0m"
+    exit 1
+  fi
+fi
+
+if ! [ -v ${SSH_PUBLIC_KEY+x} ]; then echo "SSH_PUBLIC_KEY provided with value: $SSH_PUBLIC_KEY"; else
+  echo -e "# \e[1;31mSSH_PUBLIC_KEY not provided. Assuming default.\e[0m"
+  SSH_PUBLIC_KEY=0
+fi
+if ! [ -v ${SSH_PRIVATE_KEY+x} ]; then echo "SSH_PRIVATE_KEY provided, but not printing here for security reasons."; else
+  echo -e "# \e[1;31mSSH_PRIVATE_KEY not provided. Assuming default.\e[0m"
+  SSH_PRIVATE_KEY=0
 fi
 
 # Output the version of software we need. This will fail if not installed and it is what we want.
