@@ -39,7 +39,7 @@ function composer_update_all() {
   exit_code=$?
   if [ $exit_code -ne 0 ]; then
     echo "$COMPOSER_UPDATE_CMD"
-    echo -e "# \e[1;31mComposer command exited with a non-zero status code: $exit_code\e[0m"; exit 1;
+    echo -e "# \e[1;31mComposer command exited with a non-zero status code: $exit_code\e[0m";
     exit 1
   fi
 

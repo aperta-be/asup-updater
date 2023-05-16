@@ -6,7 +6,6 @@ echo "SELF_TEST provided with value: $SELF_TEST"
 echo "DRY_RUN provided with value: $DRY_RUN"
 echo "VERBOSE provided with value: $VERBOSE"
 
-
 if ! [ -v ${COMPOSER_UPDATE_CONSTRAINTS+x} ]; then
   echo "COMPOSER_UPDATE_CONSTRAINTS provided with value: $COMPOSER_UPDATE_CONSTRAINTS"
 else
@@ -111,25 +110,15 @@ fi
 if ! [ -v ${GIT_APERTA_USER+x} ]; then
   echo "GIT_APERTA_USER provided with value: $GIT_APERTA_USER"
 else
-  if ! [ -v ${CI+x} ]; then
-    GIT_APERTA_USER="gitlab-ci-token"
-    echo "GIT_APERTA_USER fallback to CI user: $GIT_APERTA_USER"
-  else
-    echo -e "# \e[1;31mGIT_APERTA_USER not provided.\e[0m"
-  fi
+  GIT_APERTA_USER="apertabot"
+  echo "GIT_APERTA_USER fallback to CI user: $GIT_APERTA_USER"
 fi
 
 if ! [ -v ${GIT_APERTA_TOKEN+x} ]; then
   echo "GIT_APERTA_TOKEN provided with value: $GIT_APERTA_TOKEN"
 else
-
-  if ! [ -v ${CI_JOB_TOKEN+x} ]; then
-    GIT_APERTA_TOKEN=$CI_JOB_TOKEN
-    echo "GIT_APERTA_TOKEN fallback to CI user: ${GIT_APERTA_USER::-18}"
-  else
-    echo -e "# \e[1;31mGIT_APERTA_TOKEN not provided. This is fatal.\e[0m"
-    exit 1
-  fi
+  echo -e "# \e[1;31mGIT_APERTA_TOKEN not provided. This is fatal.\e[0m"
+  exit 1
 fi
 
 if ! [ -v ${SSH_PUBLIC_KEY+x} ]; then echo "SSH_PUBLIC_KEY provided with value: $SSH_PUBLIC_KEY"; else
