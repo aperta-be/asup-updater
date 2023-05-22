@@ -59,7 +59,7 @@ Defaults to 0.
 - **GIT_HOST**: The hostname without protocol and without a trailing slash.
 - **GIT_NAMESPACE**: Groups and subgroups in case o Gitlab VCS and owner in case of Github.
 - **GIT_PROJECT**: The project name. This is normally the last part of the project's URL.
-- **GIT_BRANCH_TARGET**: The branch the system will start from. For production this is *master* is most cases.
+- **GIT_BRANCH_TARGET**: The branch the system will start from. For production this is *master* in most cases.
 - **GIT_CLONE_URL**: The clone command provided by Gitlab.
 - **GIT_APERTA_USER**: The APERTA user for the Git repository.
 - **GIT_APERTA_TOKEN**: The APERTA token for user access.
