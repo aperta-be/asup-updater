@@ -19,7 +19,7 @@ function git_get_code() {
   if [ "$GIT_CLONE_URL" != "$GIT_CLONE_URL_WITH_TOKEN" ]; then
     echo "Clone URL use https protocol. Add token to clone URL."
   fi
-  GCM_INTERACTIVE=never GIT_TERMINAL_PROMPT=0 git clone --branch $GIT_BRANCH_TARGET --progress --verbose $GIT_CLONE_URL_WITH_TOKEN . || exit_code=$?
+  GCM_INTERACTIVE=never GIT_TERMINAL_PROMPT=0 git clone --branch $GIT_BRANCH_TARGET -q $GIT_CLONE_URL_WITH_TOKEN . || exit_code=$?
   if [[ $exit_code -gt 0 ]]; then
     echo -e "# \e[1;31mGit clone command exited with a non-zero status code: $exit_code\e[0m"
     echo $GIT_CLONE_URL_WITH_TOKEN
