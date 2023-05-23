@@ -5,24 +5,37 @@
 # API integration with GitLab.
 function building_blocks_gitlab_api() {
   SCRIPT_LOCATION="/code/app/php/gitlab-api.php"
-  if [ -f $SCRIPT_LOCATION ];
-    then API_OUTPUT=$(php $SCRIPT_LOCATION);
+  if [ -f $SCRIPT_LOCATION ]; then
+    API_OUTPUT=$(php $SCRIPT_LOCATION)
+    exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+      echo "$COMPOSER_UPDATE_CMD"
+      echo -e "# \e[1;31mGitlab API request exited with a non-zero status code: $exit_code\e[0m"
+      exit 1
+    fi
     # Catch PHP Output
     MERGE_REQUEST_URL=$(echo "$API_OUTPUT" | grep "# Merge request URL: " | sed 's/# Merge request URL: //g')
     echo "$API_OUTPUT"
-    else exit 1;
+  else
+    exit 1
   fi
 }
 
 # API integration with GitHub.
 function building_blocks_github_api() {
   SCRIPT_LOCATION="/code/app/php/github-api.php"
-  if [ -f $SCRIPT_LOCATION ];
-    then API_OUTPUT=$(php $SCRIPT_LOCATION);
+  if [ -f $SCRIPT_LOCATION ]; then
+    API_OUTPUT=$(php $SCRIPT_LOCATION) exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+      echo "$COMPOSER_UPDATE_CMD"
+      echo -e "# \e[1;31mGithub API request exited with a non-zero status code: $exit_code\e[0m"
+      exit 1
+    fi
     # Catch PHP Output
     MERGE_REQUEST_URL=$(echo "$API_OUTPUT" | grep "# Pull request URL: " | sed 's/# Pull request URL: //g')
     echo "$API_OUTPUT"
-    else exit 1;
+  else
+    exit 1
   fi
 }
 
