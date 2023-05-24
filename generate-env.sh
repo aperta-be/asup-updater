@@ -54,5 +54,5 @@ GIT_NAMESPACE=aperta
 GIT_PROJECT=composer-outdated-project
 GIT_BRANCH_TARGET=${GIT_BRANCH_TARGET}
 GIT_APERTA_USER=apertatester
-GIT_APERTA_TOKEN=glpat-AxkR9s4tu2y97sEsKYxy
+GIT_APERTA_TOKEN=glpat-FdXwbyky_cxmzoKkgLEF
 EOL
