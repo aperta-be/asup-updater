@@ -9,7 +9,7 @@ function building_blocks_gitlab_api() {
     API_OUTPUT=$(php $SCRIPT_LOCATION)
     exit_code=$?
     if [ $exit_code -ne 0 ]; then
-      echo "$COMPOSER_UPDATE_CMD"
+      echo "$API_OUTPUT"
       echo -e "# \e[1;31mGitlab API request exited with a non-zero status code: $exit_code\e[0m"
       exit 1
     fi
@@ -27,7 +27,7 @@ function building_blocks_github_api() {
   if [ -f $SCRIPT_LOCATION ]; then
     API_OUTPUT=$(php $SCRIPT_LOCATION) exit_code=$?
     if [ $exit_code -ne 0 ]; then
-      echo "$COMPOSER_UPDATE_CMD"
+      echo "$API_OUTPUT"
       echo -e "# \e[1;31mGithub API request exited with a non-zero status code: $exit_code\e[0m"
       exit 1
     fi
