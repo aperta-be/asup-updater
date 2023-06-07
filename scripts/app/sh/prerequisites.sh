@@ -26,13 +26,18 @@ else
   APP_PUBLIC_ROOT_DIRECTORY="web"
 fi
 
-echo "MATTERMOST_HOOK provided with value: ${MATTERMOST_HOOK::-18}..."
+if ! [ -v ${MATTERMOST_HOOK+x} ]; then
+  echo "MATTERMOST_HOOK provided with value: ${MATTERMOST_HOOK::-18}..."
+else
+  MATTERMOST_HOOK='https://mattermost.dazzle.be/hooks/33akt56za7gu7dmxg1wa5bedtr'
+  echo "MATTERMOST_HOOK provided with value: ${MATTERMOST_HOOK::-18}..."
+fi
 
 if ! [ -v ${GIT_AUTO_MERGE+x} ]; then
   echo "GIT_AUTO_MERGE provided with value: $GIT_AUTO_MERGE"
 else
-  echo "GIT_AUTO_MERGE not provided fallback to: $GIT_AUTO_MERGE"
   GIT_AUTO_MERGE=0
+  echo "GIT_AUTO_MERGE not provided fallback to: $GIT_AUTO_MERGE"
 fi
 
 if ! [ -v ${VCS_PROVIDER+x} ]; then

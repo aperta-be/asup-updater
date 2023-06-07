@@ -5,8 +5,7 @@ function composer_install() {
   echo -e "# \e[1;35mComposer install...\e[0m"
   args=()
   [[ $VERBOSE -eq 0 ]] && args+=( '--quiet' )
-  composer clear
-  composer install --prefer-dist "${args[@]}"
+  composer install --no-cache --prefer-dist "${args[@]}"
   if [[ $? -eq 0 ]]; then echo -e "# \e[1;35mComposer install successfully!\e[0m";
     else
       echo -e "# \e[1;31mComposer install failed... That's bad news.\e[0m";
