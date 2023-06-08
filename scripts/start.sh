@@ -38,6 +38,9 @@ git_write_vars_vcs
 # Composer functions.
 source /code/app/sh/composer.sh
 
+# Composer additional configuration
+composer_config
+
 # Composer install packages.
 composer_install
 

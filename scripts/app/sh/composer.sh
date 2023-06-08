@@ -1,5 +1,22 @@
 #!/bin/bash
 
+
+# Executes composer additional config.
+function composer_config() {
+if ! [ -v ${COMPOSER_CONFIG+x} ]; then
+  echo -e "# \e[1;35mComposer configuration\e[0m"
+  args=()
+  [[ $VERBOSE -eq 0 ]] && args+=( '--quiet' )
+  composer config $COMPOSER_CONFIG "${args[@]}"
+  if [[ $? -eq 0 ]]; then echo -e "# \e[1;35mComposer configured successfully!\e[0m";
+    else
+      echo -e "# \e[1;31mComposer configuration failed... That's bad news.\e[0m";
+    exit 1;
+  fi
+fi
+}
+
+
 # Executes composer install with a dry-run first.
 function composer_install() {
   echo -e "# \e[1;35mComposer install...\e[0m"

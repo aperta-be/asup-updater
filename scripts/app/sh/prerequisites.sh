@@ -13,6 +13,10 @@ else
   COMPOSER_UPDATE_CONSTRAINTS=0
 fi
 
+if ! [ -v ${COMPOSER_CONFIG+x} ]; then
+  echo "COMPOSER_CONFIG provided with value: $COMPOSER_CONFIG"
+fi
+
 if ! [ -v ${APP_PUBLIC_ROOT_DIRECTORY+x} ]; then
   if [[ $APP_PUBLIC_ROOT_DIRECTORY == 0 ]]; then
     echo "APP_PUBLIC_ROOT_DIRECTORY (0) default to GIT root: $APP_CODE_DIRECTORY"
