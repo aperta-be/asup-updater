@@ -14,6 +14,7 @@ else
 fi
 
 if ! [ -v ${COMPOSER_CONFIG+x} ]; then
+  COMPOSER_CONFIG=$(echo $COMPOSER_CONFIG| sed -e 's/^"//' -e 's/"$//')
   echo "COMPOSER_CONFIG provided with value: $COMPOSER_CONFIG"
 fi
 
