@@ -4,7 +4,7 @@
 ASUP_TIMESTAMP=$(date +%s)
 APP_CODE_DIRECTORY="/code/project";
 GIT_USER_NAME="ASUP"
-GIT_USER_EMAIL="asup@support.hostdog.eu"
+GIT_USER_EMAIL="apertabot@aperta.be"
 GIT_BRANCH_SOURCE="asup/$ASUP_TIMESTAMP"
 
 # Load some building block functions.
