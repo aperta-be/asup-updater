@@ -23,8 +23,10 @@ RUN docker-php-ext-install -j "$(nproc)" \
 	;
 
 
-# Composer > 2.2 introduces a new challenge: https://getcomposer.org/allow-plugins
-COPY --from=composer:2.5 /usr/bin/composer /usr/local/bin/composer
+COPY --from=composer:2.5.8 /usr/bin/composer /usr/local/bin/composer
+# We don't use 2.2 yet as it introduced a new challenge: https://getcomposer.org/allow-plugins
+#COPY --from=composer:2.1.14 /usr/bin/composer /usr/local/bin/composer
+#COPY --from=composer:1.10.25 /usr/bin/composer /usr/local/bin/composer
 
 # We use this library to invoke commands to Gitlab.
 RUN mkdir -p /code/api; \
