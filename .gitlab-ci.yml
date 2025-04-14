@@ -1,85 +1,126 @@
+# ASUP GitLab CI/CD Configuration
+# This pipeline builds and tests ASUP for multiple PHP versions
+
+variables:
+  # Define default branch for development
+  DEV_BRANCH: "develop"
+  # Container registry settings
+  REGISTRY: $CI_REGISTRY
+  REGISTRY_IMAGE: $CI_REGISTRY_IMAGE
+
+# Define stages
 stages:
-  - trigger
+  - quality
+  - prepare
   - build
   - test
 
-# Generate child pipelines
-.factory: &factory
-  stage: trigger
-  tags:
-    - sandbox
-  artifacts:
-    expire_in: 1 week
+# Template for PHP version matrix
+.php_matrix: &php_matrix
+  parallel:
+    matrix:
+      - PHP_VERSION: ["7.4", "8.0", "8.1", "8.2"]
+
+# Code quality checks
+quality:
+  stage: quality
+  image: php:8.2-cli
+  before_script:
+    - apt-get update && apt-get install -y git unzip
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer global require "squizlabs/php_codesniffer=*"
+    - composer global require "phpstan/phpstan=*"
+    - composer global require "friendsofphp/php-cs-fixer=*"
+    - export PATH="$PATH:$HOME/.composer/vendor/bin"
+  script:
+    # Install dependencies
+    - composer install --prefer-dist --no-progress
+    
+    # Run code quality checks
+    - phpcs --standard=phpcs.xml
+    - php-cs-fixer fix --dry-run --diff
+    - phpstan analyse --configuration phpstan.neon
+  cache:
     paths:
-      - .gitlab-ci-child-build-dynamic.yml
-      - .gitlab-ci-child-test-dynamic.yml
+      - vendor/
+      - .php-cs-fixer.cache
 
-factory:develop:
-  <<: *factory
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
+# Prepare stage: Generate necessary configuration
+prepare:
+  stage: prepare
+  needs: ["quality"]
   script:
-    # Execute CI factory and pass the last used tag
-    - export LAST_TAG="dev"
-    - echo "Building ASUP Release ${LAST_TAG}"
-    - ./ci-factory.sh ${LAST_TAG}
+    - |
+      if [[ "$CI_COMMIT_TAG" ]]; then
+        export BUILD_TAG="$CI_COMMIT_TAG"
+      elif [[ "$CI_COMMIT_BRANCH" == "$DEV_BRANCH" ]]; then
+        export BUILD_TAG="dev"
+      else
+        export BUILD_TAG="latest"
+      fi
+    - echo "BUILD_TAG=$BUILD_TAG" >> build.env
+  artifacts:
+    reports:
+      dotenv: build.env
 
-# Build develop releases
-trigger:build:develop:
+# Build stage: Build Docker images for each PHP version
+build:
   stage: build
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-  trigger:
-    strategy: depend
-    include:
-      - artifact: .gitlab-ci-child-build-dynamic.yml
-        job: factory:develop
-  needs:
-    - job: factory:develop
-      artifacts: true
+  needs: ["prepare"]
+  <<: *php_matrix
+  image: docker:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - |
+      # Build the image
+      docker build \
+        --build-arg PHP_VERSION=$PHP_VERSION \
+        -t $REGISTRY_IMAGE:$BUILD_TAG-$PHP_VERSION \
+        -f Dockerfile-$PHP_VERSION .
+      
+      # Push the image
+      docker push $REGISTRY_IMAGE:$BUILD_TAG-$PHP_VERSION
+      
+      # Tag as latest if on main branch
+      if [[ "$CI_COMMIT_BRANCH" == "main" || "$CI_COMMIT_BRANCH" == "master" ]]; then
+        docker tag $REGISTRY_IMAGE:$BUILD_TAG-$PHP_VERSION $REGISTRY_IMAGE:latest-$PHP_VERSION
+        docker push $REGISTRY_IMAGE:latest-$PHP_VERSION
+      fi
 
-# Test develop releases
-trigger:test:
+# Test stage: Run tests for each PHP version and VCS provider
+test:
   stage: test
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-  trigger:
-    include:
-      - artifact: .gitlab-ci-child-test-dynamic.yml
-        job: factory:develop
-  needs:
-    - job: factory:develop
-      artifacts: true
-    - job: trigger:build:develop
-
-
-factory:production:
-  <<: *factory
-  stage: trigger
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-      when: never
-    - if: $CI_COMMIT_TAG
-      when: always
+  needs: ["build"]
+  <<: *php_matrix
+  parallel:
+    matrix:
+      - VCS_PROVIDER: ["github", "gitlab"]
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # Generate test environment
+    - ./scripts/generate-env.sh "test-$PHP_VERSION"
   script:
-    # Execute CI factory and pass the last used tag
-    - export LAST_TAG=$(git describe --tags --abbrev=0)
-    - echo "Building ASUP Release ${LAST_TAG}"
-    - ./ci-factory.sh ${LAST_TAG}
+    - |
+      # Pull the image
+      docker pull $REGISTRY_IMAGE:$BUILD_TAG-$PHP_VERSION
+      
+      # Run tests
+      docker run \
+        --env-file=.env_$VCS_PROVIDER \
+        $REGISTRY_IMAGE:$BUILD_TAG-$PHP_VERSION
 
-# Build releases
-trigger:build:production:
-  stage: build
+# Rules for when to run pipelines
+workflow:
   rules:
-    - if: '$CI_COMMIT_BRANCH == "develop"'
-      when: never
     - if: $CI_COMMIT_TAG
       when: always
-  trigger:
-    strategy: depend
-    include:
-      - artifact: .gitlab-ci-child-build-dynamic.yml
-        job: factory:production
-  needs:
-    - job: factory:production
-      artifacts: true
+    - if: $CI_COMMIT_BRANCH == $DEV_BRANCH
+      when: always
+    - if: $CI_COMMIT_BRANCH == "main" || $CI_COMMIT_BRANCH == "master"
+      when: always
+    - if: $CI_MERGE_REQUEST_ID
+      when: always
+    - when: never

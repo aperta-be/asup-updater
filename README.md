@@ -1,79 +1,128 @@
-# ASUP
-Aperta/Automated Security Updates Provider
+# ASUP (Automated Security Updates Provider)
 
-This Docker container will use a GIT repository to update Drupal core, contrib 
-and dependencies via composer.
+[![CI Status](https://github.com/your-org/asup/workflows/CI/badge.svg)](https://github.com/your-org/asup/actions)
+[![Documentation Status](https://github.com/your-org/asup/workflows/Documentation/badge.svg)](https://your-org.github.io/asup/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PHP Versions](https://img.shields.io/badge/PHP-7.4%20|%208.0%20|%208.1%20|%208.2-blue)](https://github.com/your-org/asup)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/your-org/asup/blob/main/CONTRIBUTING.md)
 
-## Local development
-Create a .env file in the "scripts" folder in your local for local development so 
-you can test during build phase.
+ASUP is a powerful Docker-based automation tool that helps maintain secure and up-to-date dependencies in PHP projects using Composer. It automatically creates pull/merge requests for updates, supports multiple PHP versions, and integrates with both GitLab and GitHub.
 
-Example content below:
+## 🚀 Features
 
+- **Automated Updates**: Automatically check and update Composer dependencies
+- **Multiple VCS Support**: Works with both GitLab and GitHub
+- **Docker-based**: Consistent and isolated execution environment
+- **Multi-PHP Support**: Compatible with PHP 7.4, 8.0, 8.1, and 8.2
+- **Flexible Configuration**: Extensive configuration options
+- **Security Focused**: Built-in security checks and validations
+- **Notification System**: Mattermost integration for updates
+
+## 📋 Requirements
+
+- Docker 20.10.0 or higher
+- Git 2.28.0 or higher
+- Access to GitLab or GitHub repository
+- Composer-based PHP project
+
+## 🔧 Quick Start
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/your-org/asup.git
+   cd asup
+   ```
+
+2. **Run Setup Script**
+   ```bash
+   ./scripts/setup-local-env.sh
+   ```
+
+3. **Configure Environment**
+   ```bash
+   # Edit .env with your settings
+   cp .env.example .env
+   ```
+
+4. **Generate SSH Keys**
+   ```bash
+   ./scripts/generate-ssh-keys.sh your-project
+   ```
+
+5. **Run ASUP**
+   ```bash
+   docker run --env-file .env your-org/asup:latest
+   ```
+
+## 📚 Documentation
+
+Comprehensive documentation is available at [https://your-org.github.io/asup/](https://your-org.github.io/asup/)
+
+- [Getting Started Guide](docs/getting-started.md)
+- [Configuration Reference](docs/configuration.md)
+- [API Documentation](docs/api.md)
+- [Architecture Overview](docs/architecture.md)
+- [Troubleshooting Guide](docs/troubleshooting.md)
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on how to get involved.
+
+### Development Setup
+
+```bash
+# Setup development environment
+./scripts/setup-local-env.sh
+
+# Run tests
+./test.sh
+
+# Generate debug report
+./scripts/debug-report.sh
 ```
-# General APERTA variables
-SELF_TEST=1
-DRY_RUN=1
-VERBOSE=1
 
-# ASUP variable
-COMPOSER_UPDATE_CONSTRAINTS=1
-APP_PUBLIC_ROOT_DIRECTORY=www
-MATTERMOST_HOOK="https://mattermost.dazzle.be/hooks/33akt56za7gu7dmxg1wa5bedtr"
+## 🔒 Security
 
-# Repository variables
-VCS_PROVIDER="gitlab"
-GIT_AUTO_MERGE=1
-GIT_HOST="gitlab.dazzle.be"
-GIT_NAMESPACE="dazzle"
-GIT_PROJECT="brrc-geoportal"
-GIT_BRANCH_TARGET="test-branch-kevin"
-GIT_CLONE_URL="git@gitlab.dazzle.be:dazzle/brrc-geoportal.git"
+For security-related information and reporting vulnerabilities, please see our [Security Policy](SECURITY.md).
 
-# Credentials
-GIT_APERTA_USER="ksjdfoz-djfioezjfoizejio"
-GIT_APERTA_TOKEN="ksjdfoz-djfioezjfoizejio"
+## 📜 License
 
-# SSH keys
-SSH_PUBLIC_KEY="ssh-ed25519 NzaC1rZXktdjEAAA...."
-SSH_PRIVATE_KEY="-----BEGIN OPENSSH PRIVATE KEY-----
-b3BlbnNzaC1rZXktdjEAAAAABG5vbmU...
-....AGHRyeXBva2FyaWRvc0BNaW5pWC5sb
------END OPENSSH PRIVATE KEY-----"
-```
+ASUP is open-source software licensed under the MIT license. See the [LICENSE](LICENSE) file for details.
 
-### Environment variables explained
-- **SELF_TEST**: If set to 0, the system will skip self-testing. Defaults to 1. It's not recommended turning this off
-  unless you need to.
-- **DRY_RUN**: The DRY_RUN parameter will make sure actual git push commands are not executed and that the
-  actions are contained to local run.
-- **VERBOSE**: Verbosity level. For now we have only 1.
-- **COMPOSER_UPDATE_CONSTRAINTS**: If set to 1, this system will alter the composer.json file to update constraints
-  so that the actual latest version is used. This is an advanced feature since it will try to force-update
-  libraries. Defaults to 0.
-- **APP_PUBLIC_ROOT_DIRECTORY**: The application's' public accessible directory. Use 0 to use the GIT root. Defaults to web.
-- **MATTERMOST_HOOK**: The Mattermost web hook URL for reports.
-- **VCS_PROVIDER**: The VCS provider available options are: gitlab, github. If the container runs thought a pipeline defaults to gitlab.
-- **GIT_AUTO_MERGE**: If set to 1, it will auto-merge the asup branch back into the GIT_BRANCH_TARGET. 
-Defaults to 0.
-- **GIT_HOST**: The hostname without protocol and without a trailing slash.
-- **GIT_NAMESPACE**: Groups and subgroups in case o Gitlab VCS and owner in case of Github.
-- **GIT_PROJECT**: The project name. This is normally the last part of the project's URL.
-- **GIT_BRANCH_TARGET**: The branch the system will start from. For production this is *master* in most cases.
-- **GIT_CLONE_URL**: The clone command provided by Gitlab.
-- **GIT_APERTA_USER**: The APERTA user for the Git repository.
-- **GIT_APERTA_TOKEN**: The APERTA token for user access.
-- **SSH_PUBLIC_KEY**: Optionally provide a SSH public key. Defaults to (0) docker image SSH public key.
-- **SSH_PRIVATE_KEY**: Optionally provide a SSH private key. Defaults to (0) docker image SSH private key.
+## 🌟 Support
 
-### Variables that can be inherited from gitlab CI environment
-- **GIT_HOST**=$CI_SERVER_HOST
-- **GIT_PROJECT**=$CI_PROJECT_PATH
-- **GIT_BRANCH_TARGET**=$CI_COMMIT_BRANCH
-- **GIT_CLONE_URL**=`"git@"$CI_SERVER_HOST":"$CI_PROJECT_PATH".git"`
+- 📖 [Documentation](https://your-org.github.io/asup/)
+- 🐛 [Issue Tracker](https://github.com/your-org/asup/issues)
+- 💬 [Discussions](https://github.com/your-org/asup/discussions)
 
+## ✨ Contributors
 
-### Troubleshoot
-If the build image process takes longer than 5 minute (default duration) the container registry login will expire, 
-To solve this issue we have to increase the GitLab authorization token duration from GitLab > Admin area > Settings > CI/CD > Container Registry
-https://gitlab.com/gitlab-org/gitlab/-/issues/23486
+Thanks goes to these wonderful people:
+
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://allcontributors.org) specification.
+
+## 📊 Project Status
+
+- ✅ Active development
+- 🚀 Regular updates
+- 💪 Production ready
+- 🤝 Accepting contributions
+
+## 🗺️ Roadmap
+
+See our [project roadmap](https://github.com/your-org/asup/projects) for planned features and improvements.
+
+## 📣 Stay Informed
+
+- [Release Notes](CHANGELOG.md)
+- [GitHub Releases](https://github.com/your-org/asup/releases)
+- Star this repository to get notified about major updates
+
+---
+
+<p align="center">
+  Made with ❤️ by the ASUP team
+</p>

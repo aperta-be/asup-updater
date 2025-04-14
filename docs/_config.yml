@@ -1,0 +1,35 @@
+title: ASUP Documentation
+description: Documentation for the Automated Security Updates Provider
+theme: jekyll-theme-minimal
+
+# GitHub Pages settings
+url: ""
+baseurl: "/asup"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Navigation
+header_pages:
+  - index.md
+  - getting-started.md
+  - configuration.md
+  - api.md
+  - architecture.md
+  - troubleshooting.md
+
+# Exclude files from processing
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .git
+  - .github
+  - README.md
+
+# Plugins
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap

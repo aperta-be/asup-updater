@@ -1,2 +1,50 @@
-.idea
+# IDE and Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment files
 .env
+.env.*
+!.env.example
+.env_github
+.env_gitlab
+
+# SSH Keys and certificates
+ssh/
+*.pem
+*.key
+id_*
+known_hosts
+authorized_keys
+
+# Composer
+/vendor/
+composer.phar
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Test and temporary files
+*.cache
+*.tmp
+*.temp
+/temp/
+/tmp/

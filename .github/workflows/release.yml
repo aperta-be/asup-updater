@@ -1,0 +1,121 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  create-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Get Changelog Entry
+        id: changelog_reader
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          version: ${{ steps.get_version.outputs.VERSION }}
+          path: ./CHANGELOG.md
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: ${{ steps.changelog_reader.outputs.changes }}
+          draft: false
+          prerelease: false
+          files: |
+            LICENSE
+            README.md
+            CHANGELOG.md
+
+  publish-docker:
+    needs: create-release
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['7.4', '8.0', '8.1', '8.2']
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: Dockerfile-${{ matrix.php-version }}
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/asup:${{ steps.get_version.outputs.VERSION }}-php${{ matrix.php-version }}
+            ghcr.io/${{ github.repository }}/asup:latest-php${{ matrix.php-version }}
+
+  update-docs:
+    needs: create-release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Build and deploy documentation
+        run: |
+          cd docs
+          bundle install
+          bundle exec jekyll build
+          
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/_site
+          enable_jekyll: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'docs: update for release ${{ steps.get_version.outputs.VERSION }}'
+
+  notify:
+    needs: [publish-docker, update-docs]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Notify Mattermost
+        if: env.MATTERMOST_WEBHOOK_URL != ''
+        uses: mattermost/action-mattermost-notify@v1
+        env:
+          MATTERMOST_WEBHOOK_URL: ${{ secrets.MATTERMOST_WEBHOOK_URL }}
+        with:
+          text: |
+            ### New ASUP Release ${{ steps.get_version.outputs.VERSION }}
+            
+            🚀 A new version of ASUP has been released!
+            
+            - Documentation: https://your-org.github.io/asup/
+            - Release Notes: https://github.com/${{ github.repository }}/releases/tag/v${{ steps.get_version.outputs.VERSION }}
+            - Docker Images: https://github.com/${{ github.repository }}/pkgs/container/asup
