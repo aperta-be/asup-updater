@@ -1,0 +1,62 @@
+name: Documentation
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.2'
+        bundler-cache: true
+
+    - name: Setup Jekyll
+      run: |
+        cd docs
+        gem install bundler
+        bundle init
+        bundle add jekyll
+        bundle add jekyll-theme-minimal
+        bundle add jekyll-seo-tag
+        bundle add jekyll-sitemap
+
+    - name: Build Documentation
+      run: |
+        cd docs
+        bundle exec jekyll build
+
+    # Deploy only on push to main/master
+    - name: Deploy to GitHub Pages
+      if: github.event_name == 'push'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs/_site
+        enable_jekyll: true
+        user_name: 'github-actions[bot]'
+        user_email: 'github-actions[bot]@users.noreply.github.com'
+        commit_message: 'docs: update documentation'
+
+    # Always check build on PRs
+    - name: Check Build
+      if: github.event_name == 'pull_request'
+      run: |
+        if [ ! -d "docs/_site" ]; then
+          echo "Documentation build failed!"
+          exit 1
+        fi

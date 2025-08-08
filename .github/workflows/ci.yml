@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['7.4', '8.0', '8.1', '8.2']
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, xml, curl, zip, bcmath, soap, intl
+        coverage: xdebug
+    
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+    
+    - name: Run PHP CodeSniffer
+      run: vendor/bin/phpcs --standard=phpcs.xml scripts/app/php/ src/
+    
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse --configuration=phpstan.neon
+    
+    - name: Build Docker images
+      run: ./build.local.sh
+    
+    - name: Run tests
+      run: ./test.sh
+      env:
+        GIT_USER: test-user
+        GIT_TOKEN: test-token
+        VCS_PROVIDER: github
+        GIT_HOST: github.com
+        GIT_NAMESPACE: test-org
+        GIT_PROJECT: test-project
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'

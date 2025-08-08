@@ -1,0 +1,65 @@
+name: Validate Documentation
+
+on:
+  push:
+    branches:
+      - main
+      - master
+      - develop
+    paths:
+      - '**/*.md'
+      - '.github/workflows/validate-docs.yml'
+  pull_request:
+    paths:
+      - '**/*.md'
+      - '.github/workflows/validate-docs.yml'
+  workflow_dispatch:
+
+jobs:
+  markdown-link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install markdown-link-check
+        run: npm install -g markdown-link-check
+
+      - name: Check links in markdown files
+        run: |
+          find . -name "*.md" -not -path "./docs/vendor/*" -print0 | xargs -0 -n1 markdown-link-check -c .github/workflows/markdown-link-check.json
+
+  markdownlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install markdownlint-cli
+        run: npm install -g markdownlint-cli
+
+      - name: Run markdownlint
+        run: markdownlint '**/*.md' --ignore 'docs/vendor/**'
+
+  vale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Vale
+        run: |
+          curl -sfL https://install.goreleaser.com/github.com/ValeLint/vale.sh | sh -s v2.20.0
+          sudo mv ./bin/vale /usr/local/bin/vale
+
+      - name: Run Vale
+        run: |
+          vale sync
+          vale --no-wrap docs/*.md README.md CONTRIBUTING.md SECURITY.md CHANGELOG.md

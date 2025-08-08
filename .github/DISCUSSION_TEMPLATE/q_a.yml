@@ -1,0 +1,67 @@
+title: "[Question] "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for starting a discussion! Please fill out the information below to help us assist you better.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      description: Which part of ASUP is this question about?
+      options:
+        - General Usage
+        - Configuration
+        - GitLab Integration
+        - GitHub Integration
+        - Docker Setup
+        - Composer Updates
+        - CI/CD Integration
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What would you like to know?
+      placeholder: |
+        Please provide as much detail as possible. Include:
+        - What you're trying to achieve
+        - What you've tried so far
+        - Any error messages you're seeing
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Please provide your environment details
+      value: |
+        - ASUP Version:
+        - PHP Version:
+        - Docker Version:
+        - VCS Provider:
+        - Operating System:
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Configuration
+      description: If relevant, share your configuration (remove sensitive data)
+      render: yaml
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this question, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

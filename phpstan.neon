@@ -1,0 +1,42 @@
+parameters:
+    # Level 7 is the highest level
+    level: 7
+
+    paths:
+        - scripts/app/php
+
+    excludePaths:
+        - vendor/*
+        - tests/*
+
+    # Enable strict rules
+    checkMissingIterableValueType: true
+    checkGenericClassInNonGenericObjectType: true
+    
+    # Ignore some errors
+    ignoreErrors:
+        # Add specific error patterns to ignore if needed
+        # - '#PHPDoc tag @var#'
+
+    # Enable bleeding edge features
+    featureToggles:
+        disableRuntimeReflectionProvider: true
+
+    # Enforce explicit types
+    checkExplicitMixed: true
+    checkPhpDocMissingReturn: true
+
+    # Type-specific checks
+    checkUnionTypes: true
+    checkBenevolentUnionTypes: true
+
+    # Function/method analysis
+    reportMaybesInMethodSignatures: true
+    reportStaticMethodSignatures: true
+
+    # Class analysis
+    reportPrivatePropertyAccess: true
+    reportUnmatchedIgnoredErrors: true
+
+    # PHP 8 features
+    php80Migration: true

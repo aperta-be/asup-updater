@@ -1,0 +1,32 @@
+# ASUP Configuration Example (YAML format)
+
+# VCS Provider Configuration
+vcs_provider: github
+git_host: github.com
+git_user: "${GIT_USER}"
+git_token: "${GIT_TOKEN}"
+git_namespace: your-org
+git_project: your-project
+git_branch_target: main
+git_user_name: "ASUP Bot"
+git_user_email: "asup-bot@your-org.com"
+git_branch_prefix: asup
+
+# Package Manager Configuration
+package_manager: npm  # Auto-detected if not specified
+update_constraints: false
+
+# Notification Configuration
+notification_provider: email
+email_to: "admin@your-org.com"
+email_from: "asup@your-org.com"
+
+# General Settings
+dry_run: false
+verbose: true
+self_test: true
+
+# Advanced Settings
+timeout: 300
+retry_attempts: 3
+EOF < /dev/null
