@@ -2,98 +2,64 @@ name: CI
 
 on:
   push:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
   pull_request:
-    branches: [ main, master, develop ]
+    branches: [ main, develop ]
 
 jobs:
-  quality:
-    name: Code Quality
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ['7.4', '8.0', '8.1', '8.2']
     
     steps:
     - uses: actions/checkout@v3
-
+    
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
-        tools: composer:v2, phpcs, php-cs-fixer, phpstan
-        coverage: none
-
-    - name: Install dependencies
-      run: |
-        composer install --prefer-dist --no-progress
-
-    - name: Check coding standards (PHPCS)
-      run: phpcs --standard=phpcs.xml
-
-    - name: Check code style (PHP CS Fixer)
-      run: php-cs-fixer fix --dry-run --diff
-
-    - name: Static analysis (PHPStan)
-      run: phpstan analyse --configuration phpstan.neon
-
-  build:
-    needs: quality
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2']
-        
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v2
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Build and push
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: Dockerfile-${{ matrix.php-version }}
-        push: ${{ github.event_name != 'pull_request' }}
-        tags: |
-          ghcr.io/${{ github.repository }}/asup:${{ matrix.php-version }}
-          ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && format('ghcr.io/{0}/asup:latest-{1}', github.repository, matrix.php-version) || '' }}
-
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version: ['7.4', '8.0', '8.1', '8.2']
-        vcs: ['github', 'gitlab']
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Generate test environment
-      run: |
-        ./scripts/generate-env.sh "test-${{ matrix.php-version }}"
-      env:
-        GIT_APERTA_USER: ${{ secrets.GIT_APERTA_USER }}
-        GIT_APERTA_TOKEN: ${{ secrets.GIT_APERTA_TOKEN }}
-        MATTERMOST_HOOK: ${{ secrets.MATTERMOST_HOOK }}
-        SSH_PUBLIC_KEY: ${{ secrets.SSH_PUBLIC_KEY }}
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
+        php-version: ${{ matrix.php-version }}
+        extensions: mbstring, xml, curl, zip, bcmath, soap, intl
+        coverage: xdebug
+    
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+    
+    - name: Run PHP CodeSniffer
+      run: vendor/bin/phpcs --standard=phpcs.xml scripts/app/php/ src/
+    
+    - name: Run PHPStan
+      run: vendor/bin/phpstan analyse --configuration=phpstan.neon
+    
+    - name: Build Docker images
+      run: ./build.local.sh
+    
     - name: Run tests
-      run: |
-        docker pull ghcr.io/${{ github.repository }}/asup:${{ matrix.php-version }}
-        docker run --env-file=.env_${{ matrix.vcs }} ghcr.io/${{ github.repository }}/asup:${{ matrix.php-version }}
+      run: ./test.sh
+      env:
+        GIT_USER: test-user
+        GIT_TOKEN: test-token
+        VCS_PROVIDER: github
+        GIT_HOST: github.com
+        GIT_NAMESPACE: test-org
+        GIT_PROJECT: test-project
 
-  # Add status check for required checks
-  status:
-    needs: [quality, build, test]
+  security:
     runs-on: ubuntu-latest
     steps:
-      - name: Successful CI
-        run: exit 0
+    - uses: actions/checkout@v3
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'

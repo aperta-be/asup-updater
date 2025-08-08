@@ -1,16 +1,16 @@
 ---
 layout: default
-title: ASUP Documentation
+title: ASUP Open Source Updater Documentation
 nav_order: 1
 ---
 
-# ASUP Documentation
+# ASUP Open Source Updater Documentation
 
-Welcome to the documentation for ASUP (Automated Security Updates Provider), a powerful tool for automating security updates in PHP projects using Composer.
+Welcome to the documentation for ASUP Open Source Updater, part of the Automated Software Utility Platform (ASUP), a powerful tool for automating dependency updates in projects using Composer and other package managers.
 
-## What is ASUP?
+## What is the ASUP Open Source Updater?
 
-ASUP is a Docker-based automation tool that helps maintain secure and up-to-date dependencies in PHP projects. It:
+The ASUP Open Source Updater is a Docker-based automation tool that helps maintain secure and up-to-date dependencies in projects. It:
 
 - Automatically checks for outdated dependencies
 - Creates pull/merge requests with updates

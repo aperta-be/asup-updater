@@ -1,0 +1,20 @@
+{
+  "vcs_provider": "gitlab",
+  "git_host": "gitlab.example.com",
+  "git_user": "asup-bot",
+  "git_token": "${GIT_TOKEN}",
+  "git_namespace": "your-org",
+  "git_project": "your-project",
+  "git_branch_target": "develop",
+  "git_user_name": "ASUP Bot",
+  "git_user_email": "asup-bot@example.com",
+  "git_branch_prefix": "dependency-updates",
+  "package_manager": "composer",
+  "update_constraints": true,
+  "notification_provider": "mattermost",
+  "mattermost_hook": "${MATTERMOST_HOOK}",
+  "dry_run": false,
+  "verbose": true,
+  "self_test": true
+}
+EOF < /dev/null

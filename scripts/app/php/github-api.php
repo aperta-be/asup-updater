@@ -5,7 +5,7 @@ include '/code/api/variables.php';
 
 $client = new \Github\Client();
 
-$client->authenticate(GIT_APERTA_TOKEN, null, Github\AuthMethod::CLIENT_ID);
+$client->authenticate(GIT_TOKEN, null, Github\AuthMethod::CLIENT_ID);
 $base_path = GIT_HOST . '/' . GIT_NAMESPACE . '/' . GIT_PROJECT;
 
 // @todo: Add logic to remove any "old" open MR's.

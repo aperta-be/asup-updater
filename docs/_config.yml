@@ -1,10 +1,10 @@
-title: ASUP Documentation
-description: Documentation for the Automated Security Updates Provider
+title: ASUP Open Source Updater Documentation
+description: Documentation for the ASUP Open Source Updater (Automated Software Utility Platform)
 theme: jekyll-theme-minimal
 
 # GitHub Pages settings
 url: ""
-baseurl: "/asup"
+baseurl: "/asup-updater"
 
 # Build settings
 markdown: kramdown

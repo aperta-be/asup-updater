@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  asup:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        PHP_VERSION: 8.2
+        TIMEZONE: UTC
+    environment:
+      # VCS Configuration
+      VCS_PROVIDER: github
+      GIT_HOST: github.com
+      GIT_USER: ${GIT_USER}
+      GIT_TOKEN: ${GIT_TOKEN}
+      GIT_NAMESPACE: your-org
+      GIT_PROJECT: your-project
+      GIT_BRANCH_TARGET: main
+      GIT_USER_NAME: "ASUP Bot"
+      GIT_USER_EMAIL: "asup-bot@your-org.com"
+      
+      # Package Manager
+      PACKAGE_MANAGER: composer
+      UPDATE_CONSTRAINTS: 1
+      
+      # Notification
+      NOTIFICATION_PROVIDER: slack
+      SLACK_WEBHOOK_URL: ${SLACK_WEBHOOK_URL}
+      
+      # General Settings
+      DRY_RUN: 0
+      VERBOSE: 1
+      SELF_TEST: 1
+    volumes:
+      - ./ssh:/mount/ssh:ro
+      - ./logs:/var/log/asup
+    restart: unless-stopped
+EOF < /dev/null

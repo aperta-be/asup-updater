@@ -23,7 +23,7 @@ Before installing ASUP, ensure you have:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-org/asup.git
+git clone https://github.com/aperta-be/asup-updater.git
 cd asup
 ```
 
@@ -71,8 +71,8 @@ GIT_BRANCH_TARGET="main"
 2. Create a token with `api`, `read_repository`, and `write_repository` scopes
 3. Add the token to your `.env` file:
    ```env
-   GIT_APERTA_USER="your-gitlab-username"
-   GIT_APERTA_TOKEN="your-gitlab-token"
+   GIT_USER="your-gitlab-username"
+   GIT_TOKEN="your-gitlab-token"
    ```
 
 #### For GitHub:
@@ -80,8 +80,8 @@ GIT_BRANCH_TARGET="main"
 2. Create a token with `repo` and `workflow` scopes
 3. Add the token to your `.env` file:
    ```env
-   GIT_APERTA_USER="your-github-username"
-   GIT_APERTA_TOKEN="your-github-token"
+   GIT_USER="your-github-username"
+   GIT_TOKEN="your-github-token"
    ```
 
 ### 5. Add SSH Keys

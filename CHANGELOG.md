@@ -29,7 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved SSH key handling
 - Enhanced gitignore patterns for sensitive files
 
-## [1.0.0] - YYYY-MM-DD
+## [1.0.0] - 2025-08-04
 ### Added
 - Initial release of ASUP
 - Support for automated Composer updates
@@ -42,5 +42,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Self-test functionality
 - Composer constraint management
 
-[Unreleased]: https://github.com/your-org/asup/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/your-org/asup/releases/tag/v1.0.0
+[Unreleased]: https://github.com/aperta-be/asup-updater/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/aperta-be/asup-updater/releases/tag/v1.0.0

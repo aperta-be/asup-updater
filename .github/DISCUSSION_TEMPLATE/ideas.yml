@@ -1,0 +1,90 @@
+title: "[Idea] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your idea! We love hearing suggestions from our community.
+        Please fill out the information below to help us understand your proposal better.
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type of Idea
+      description: What kind of improvement are you suggesting?
+      options:
+        - New Feature
+        - Enhancement to Existing Feature
+        - Performance Improvement
+        - Documentation Improvement
+        - Developer Experience
+        - User Experience
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem Statement
+      description: What problem does this idea solve?
+      placeholder: |
+        Describe the current pain point or opportunity you've identified.
+        Example: "Currently, users have to manually..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How do you think this should be implemented?
+      placeholder: |
+        Describe your proposed solution. Consider:
+        - How it would work
+        - Who would benefit
+        - Any potential challenges
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: What alternatives have you considered?
+      placeholder: |
+        Have you thought about other ways to solve this problem?
+        What are the pros and cons of these alternatives?
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Expected Impact
+      description: What's the potential impact of this idea?
+      placeholder: |
+        Consider:
+        - Who would benefit?
+        - How would it improve the project?
+        - Any potential drawbacks?
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      description: Would you be interested in helping implement this idea?
+      options:
+        - label: Yes, I'd like to contribute to implementing this
+        - label: I can help with testing
+        - label: I can help with documentation
+        - label: I'm just sharing the idea
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this idea, you agree to follow our Code of Conduct
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

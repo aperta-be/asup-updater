@@ -12,8 +12,8 @@ check_required_vars() {
     
     # Common required variables
     declare -a required_vars=(
-        "GIT_APERTA_USER"
-        "GIT_APERTA_TOKEN"
+        "GIT_USER"
+        "GIT_TOKEN"
         "MATTERMOST_HOOK"
     )
     
@@ -69,8 +69,8 @@ GIT_CLONE_URL=${GITHUB_CLONE_URL:-https://github.com/your-org/your-project.git}
 GIT_NAMESPACE=${GITHUB_NAMESPACE:-your-org}
 GIT_PROJECT=${GITHUB_PROJECT:-your-project}
 GIT_BRANCH_TARGET=${GIT_BRANCH_TARGET}
-GIT_APERTA_USER=${GIT_APERTA_USER}
-GIT_APERTA_TOKEN=${GIT_APERTA_TOKEN}
+GIT_USER=${GIT_USER}
+GIT_TOKEN=${GIT_TOKEN}
 EOL
 
 ### Write Gitlab .env file
@@ -94,8 +94,8 @@ GIT_CLONE_URL=${GITLAB_CLONE_URL:-https://gitlab.com/your-org/your-project.git}
 GIT_NAMESPACE=${GITLAB_NAMESPACE:-your-org}
 GIT_PROJECT=${GITLAB_PROJECT:-your-project}
 GIT_BRANCH_TARGET=${GIT_BRANCH_TARGET}
-GIT_APERTA_USER=${GIT_APERTA_USER}
-GIT_APERTA_TOKEN=${GIT_APERTA_TOKEN}
+GIT_USER=${GIT_USER}
+GIT_TOKEN=${GIT_TOKEN}
 EOL
 
 echo "Environment files generated successfully!"

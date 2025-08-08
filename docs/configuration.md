@@ -52,8 +52,8 @@ ASUP uses environment variables for configuration. These can be set in a `.env` 
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `GIT_APERTA_USER` | Yes | Git provider username |
-| `GIT_APERTA_TOKEN` | Yes | Access token |
+| `GIT_USER` | Yes | Git provider username |
+| `GIT_TOKEN` | Yes | Access token |
 | `SSH_PUBLIC_KEY` | No | Custom SSH public key |
 | `SSH_PRIVATE_KEY` | No | Custom SSH private key |
 
@@ -104,7 +104,7 @@ variables:
 
 ```yaml
 env:
-  GIT_APERTA_TOKEN: ${{ secrets.GIT_APERTA_TOKEN }}
+  GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
   MATTERMOST_HOOK: ${{ secrets.MATTERMOST_HOOK }}
 ```
 
@@ -131,8 +131,8 @@ GIT_PROJECT=your-project
 GIT_BRANCH_TARGET=main
 
 # Authentication
-GIT_APERTA_USER=your-username
-GIT_APERTA_TOKEN=your-token
+GIT_USER=your-username
+GIT_TOKEN=your-token
 
 # Notifications
 MATTERMOST_HOOK=https://your-mattermost/hooks/your-webhook

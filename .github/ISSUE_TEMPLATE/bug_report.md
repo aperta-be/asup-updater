@@ -1,40 +1,50 @@
 ---
-name: Bug report
+name: Bug Report
 about: Create a report to help us improve ASUP
 title: '[BUG] '
 labels: bug
 assignees: ''
 ---
 
-**Describe the bug**
+## Bug Description
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Set up environment with '...'
+## Steps to Reproduce
+1. Go to '...'
 2. Run command '...'
 3. See error
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Expected Behavior
+A clear description of what you expected to happen.
 
-**Logs and Screenshots**
-If applicable, add logs or screenshots to help explain your problem.
+## Actual Behavior
+What actually happened instead.
 
-**Environment:**
- - OS: [e.g. Ubuntu 22.04]
- - PHP Version: [e.g. 8.2]
- - Docker Version: [e.g. 24.0.5]
- - ASUP Version: [e.g. 1.0.0]
- - VCS Provider: [GitHub/GitLab]
+## Environment
+- OS: [e.g. Ubuntu 20.04]
+- Docker Version: [e.g. 20.10.0]  
+- ASUP Version: [e.g. latest, commit hash]
+- PHP Version: [e.g. 8.2]
+- Package Manager: [e.g. composer, npm]
+- VCS Provider: [e.g. gitlab, github]
 
-**Configuration**
-Please provide relevant parts of your configuration (make sure to remove any sensitive information):
+## Configuration
+Please provide relevant parts of your configuration (remove sensitive data):
+
 ```env
-# Example configuration
-COMPOSER_UPDATE_CONSTRAINTS=1
-APP_PUBLIC_ROOT_DIRECTORY=web
+VCS_PROVIDER=github
+PACKAGE_MANAGER=composer
+# ... other relevant config
 ```
 
-**Additional context**
-Add any other context about the problem here.
+## Logs/Error Messages
+```
+Paste error messages or logs here
+```
+
+## Additional Context
+Add any other context about the problem here, such as:
+- Screenshots
+- Related issues
+- Workarounds you've tried
+EOF < /dev/null

@@ -1,9 +1,4 @@
-#!/usr/bin/env bash
-
-# Setup script for local development environment
-# This script helps set up the local development environment for ASUP
-
-set -e
+#!/bin/bash
 
 # Colors for output
 RED='\033[0;31m'
@@ -18,8 +13,13 @@ echo -e "\n${YELLOW}Checking required tools...${NC}"
 command -v docker >/dev/null 2>&1 || { echo -e "${RED}Docker is required but not installed. Aborting.${NC}" >&2; exit 1; }
 command -v git >/dev/null 2>&1 || { echo -e "${RED}Git is required but not installed. Aborting.${NC}" >&2; exit 1; }
 
-# Create environment file if it doesn't exist
-if [ ! -f .env ]; then
+# Load environment variables if .env exists
+if [ -f .env ]; then
+    echo -e "\n${YELLOW}Loading environment variables...${NC}"
+    set -a
+    source .env
+    set +a
+else
     echo -e "\n${YELLOW}Creating .env file from template...${NC}"
     cp .env.example .env
     echo -e "${GREEN}Created .env file. Please edit it with your settings.${NC}"
@@ -42,15 +42,19 @@ for PHP_VERSION in $(cat php_versions); do
     fi
 done
 
-# Build Docker images for all PHP versions
+# Build Docker images
 echo -e "\n${YELLOW}Building Docker images...${NC}"
-./build.local.sh
+for PHP_VERSION in $(cat php_versions); do
+    echo -e "\n${GREEN}Building image for PHP ${PHP_VERSION}${NC}"
+    docker build -t asup:dev-${PHP_VERSION} \
+        --build-arg PHP_VERSION=${PHP_VERSION} \
+        -f Dockerfile-${PHP_VERSION} .
+done
 
 echo -e "\n${GREEN}Setup complete!${NC}"
 echo -e "\nNext steps:"
-echo -e "1. Edit the ${YELLOW}.env${NC} file with your settings"
+echo -e "1. Edit ${YELLOW}.env${NC} file with your settings (if you haven't already)"
 echo -e "2. Add the SSH public key to your Git provider:"
 echo -e "   ${YELLOW}cat ssh/id_asup.pub${NC}"
 echo -e "3. Run tests with:"
 echo -e "   ${YELLOW}./test.sh${NC}"
-echo -e "\nFor more information, see the README.md file."

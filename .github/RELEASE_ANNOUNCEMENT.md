@@ -1,6 +1,6 @@
 # 🚀 Announcing ASUP {version}
 
-We're excited to announce the release of ASUP {version}! ASUP (Automated Security Updates Provider) is a powerful Docker-based tool that helps maintain secure and up-to-date dependencies in PHP projects.
+We're excited to announce the release of ASUP Open Source Updater {version}! Part of the Automated Software Utility Platform (ASUP), this is a powerful Docker-based tool that helps maintain secure and up-to-date dependencies in projects.
 
 ## ✨ Highlights
 

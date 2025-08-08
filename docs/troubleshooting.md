@@ -51,7 +51,7 @@ graph TD
 3. Check environment variables:
    ```bash
    # Verify token is set
-   echo $GIT_APERTA_TOKEN | wc -c  # Should be > 1
+   echo $GIT_TOKEN | wc -c  # Should be > 1
    ```
 
 #### 2. SSH Key Issues
@@ -248,7 +248,7 @@ graph TD
 2. Check API limits:
    ```bash
    # For GitHub
-   curl -H "Authorization: Bearer $GIT_APERTA_TOKEN" \
+   curl -H "Authorization: Bearer $GIT_TOKEN" \
        https://api.github.com/rate_limit
    ```
 

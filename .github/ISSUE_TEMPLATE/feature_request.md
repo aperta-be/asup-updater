@@ -1,32 +1,37 @@
 ---
-name: Feature request
+name: Feature Request
 about: Suggest an idea for ASUP
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''
 ---
 
-**Is your feature request related to a problem? Please describe.**
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+## Feature Description
+A clear and concise description of the feature you'd like to see.
 
-**Describe the solution you'd like**
-A clear and concise description of what you want to happen.
+## Problem/Use Case
+What problem does this feature solve? What's your use case?
 
-**Describe alternatives you've considered**
-A clear and concise description of any alternative solutions or features you've considered.
+## Proposed Solution
+Describe how you envision this feature working.
 
-**Use Case**
-Please describe the use case for this feature. How would it be used? Who would use it?
+## Plugin Category
+Which type of plugin would this be?
+- [ ] VCS Provider (GitLab, GitHub, Bitbucket, etc.)
+- [ ] Package Manager (Composer, npm, pip, etc.)
+- [ ] Notification Provider (Slack, Teams, Discord, etc.)
+- [ ] Core Feature
+- [ ] Other: ___________
 
-**Implementation Ideas**
-If you have any ideas about how this could be implemented, please share them here.
+## Implementation Ideas
+If you have ideas about how this could be implemented, please share:
 
-**Impact on Existing Features**
-How might this feature impact existing functionality? Consider:
-- Performance
-- Configuration changes
-- Backward compatibility
-- Security implications
+## Alternatives Considered
+What alternatives have you considered?
 
-**Additional context**
-Add any other context or screenshots about the feature request here.
+## Additional Context
+Add any other context, screenshots, or examples about the feature request here.
+
+## Community Benefit
+How would this feature benefit the broader ASUP community?
+EOF < /dev/null

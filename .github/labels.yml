@@ -1,0 +1,98 @@
+# Issue labels configuration
+# Format based on github-label-sync
+
+- name: "bug"
+  color: "d73a4a"
+  description: "Something isn't working"
+
+- name: "security"
+  color: "b60205"
+  description: "Security related issue or improvement"
+
+- name: "enhancement"
+  color: "a2eeef"
+  description: "New feature or request"
+
+- name: "documentation"
+  color: "0075ca"
+  description: "Improvements or additions to documentation"
+
+- name: "good first issue"
+  color: "7057ff"
+  description: "Good for newcomers"
+
+- name: "help wanted"
+  color: "008672"
+  description: "Extra attention is needed"
+
+- name: "dependencies"
+  color: "0366d6"
+  description: "Pull requests that update a dependency file"
+
+- name: "php"
+  color: "4F5D95"
+  description: "PHP related changes"
+
+- name: "docker"
+  color: "2496ED"
+  description: "Docker related changes"
+
+- name: "github_actions"
+  color: "2088FF"
+  description: "GitHub Actions workflow changes"
+
+- name: "performance"
+  color: "16c60c"
+  description: "Performance related improvements"
+
+- name: "testing"
+  color: "fbca04"
+  description: "Testing related changes"
+
+- name: "ci"
+  color: "44a8b3"
+  description: "CI/CD related changes"
+
+- name: "breaking"
+  color: "b60205"
+  description: "Breaking changes"
+
+- name: "duplicate"
+  color: "cfd3d7"
+  description: "This issue or pull request already exists"
+
+- name: "invalid"
+  color: "e4e669"
+  description: "This doesn't seem right"
+
+- name: "question"
+  color: "d876e3"
+  description: "Further information is requested"
+
+- name: "wontfix"
+  color: "ffffff"
+  description: "This will not be worked on"
+
+- name: "composer"
+  color: "885630"
+  description: "Composer related changes"
+
+- name: "refactor"
+  color: "1d76db"
+  description: "Code refactoring"
+
+- name: "cleanup"
+  color: "c2e0c6"
+  description: "Code cleanup and organization"
+
+- name: "blocked"
+  color: "b60205"
+  description: "Blocked by other issues or external factors"
+
+- name: "in progress"
+  color: "0e8a16"
+  description: "Work in progress"
+
+- name: "ready for review"
+  color: "fbca04"
+  description: "Ready to be reviewed"

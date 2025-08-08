@@ -117,17 +117,17 @@ else
   fi
 fi
 
-if ! [ -v ${GIT_APERTA_USER+x} ]; then
-  echo "GIT_APERTA_USER provided with value: $GIT_APERTA_USER"
+if ! [ -v ${GIT_USER+x} ]; then
+  echo "GIT_USER provided with value: $GIT_USER"
 else
-  GIT_APERTA_USER="apertabot"
-  echo "GIT_APERTA_USER fallback to CI user: $GIT_APERTA_USER"
+  GIT_USER="asup-bot"
+  echo "GIT_USER fallback to CI user: $GIT_USER"
 fi
 
-if ! [ -v ${GIT_APERTA_TOKEN+x} ]; then
-  echo "GIT_APERTA_TOKEN provided with value: $GIT_APERTA_TOKEN"
+if ! [ -v ${GIT_TOKEN+x} ]; then
+  echo "GIT_TOKEN provided with value: $GIT_TOKEN"
 else
-  echo -e "# \e[1;31mGIT_APERTA_TOKEN not provided. This is fatal.\e[0m"
+  echo -e "# \e[1;31mGIT_TOKEN not provided. This is fatal.\e[0m"
   exit 1
 fi
 
